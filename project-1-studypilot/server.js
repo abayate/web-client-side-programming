@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import path from 'node:path';
 import express from 'express';
 import { runAgent, cleanState } from './agent.js';
 
@@ -14,7 +15,11 @@ app.use((req, res, next) => {
   });
   next();
 });
-app.use(express.static('public'));
+// Locally Express serves public/. On Vercel the CDN serves public/ files, but
+// "/" still reaches this function, so send index.html explicitly.
+const PUBLIC = path.join(import.meta.dirname, 'public');
+app.use(express.static(PUBLIC));
+app.get('/', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html')));
 
 // The app is public and the API key is mine, so cap requests per IP.
 const WINDOW_MS = 10 * 60 * 1000, MAX_REQ = 40;
