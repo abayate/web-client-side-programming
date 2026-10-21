@@ -288,8 +288,11 @@ blocks for the midterm and explained the trade-off.}
   \item The quiz is only as accurate as the model. Explanations help, but questions should be
         checked against the course notes. Next I want to generate quizzes from the student's
         own uploaded notes.
-  \item The free Gemini tier sometimes returns ``high demand''. The retries and fallback model
-        cover most of it, but a paid key would be steadier.
+  \item The free Gemini tier has tight quotas. During testing I used up the daily quota for
+        \texttt{gemini-flash-latest}, and at first every step wasted time retrying it, so one
+        quiz request took about 4 minutes on Vercel. Now a quota error parks that model for a
+        minute and the server goes straight to \texttt{gemini-flash-lite-latest}, which brought
+        the same request down to about 5 seconds. A paid key would remove the problem.
   \item Calendar export (\texttt{.ics}) and reminders would make the plan follow the student
         instead of waiting in a tab.
 \end{itemize}
