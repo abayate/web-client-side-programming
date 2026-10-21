@@ -17,7 +17,7 @@
 \usetikzlibrary{arrows.meta, positioning}
 
 % ---- Links: update these if the URLs change -------------------------------
-\newcommand{\liveurl}{https://studypilot-ab.onrender.com}
+\newcommand{\liveurl}{https://studypilot-ab.vercel.app}
 \newcommand{\repourl}{https://github.com/abayate/web-client-side-programming}
 \newcommand{\appurl}{https://github.com/abayate/web-client-side-programming/tree/main/project-1-studypilot}
 % ---------------------------------------------------------------------------
@@ -58,7 +58,7 @@ they can actually follow. The agent pulls every dated item out of the syllabus, 
 day-by-day plan around the hours the student has, quizzes them, and re-plans when a quiz shows
 a weak topic. It is built with Node.js and the Express framework on the server, plain
 JavaScript in the browser, and Google Gemini's function (tool) calling for the agent. It is
-deployed publicly on Render. The API key lives only on the server and is never pushed to
+deployed publicly on Vercel. The API key lives only on the server and is never pushed to
 GitHub.
 \end{abstract}
 
@@ -124,14 +124,15 @@ Agent & \texttt{@google/genai} SDK with five function declarations, a maximum of
 request, retries on 503 errors, and a fallback model. \\
 Planner & \texttt{planner.js}, plain JavaScript with no AI. The model decides \emph{when} to plan
 and with what settings; the code does the math so dates and hours are never made up. \\
-Hosting & Render free web service, deployed from the GitHub repo by a \texttt{render.yaml}
-blueprint. The key is set in Render's dashboard. \\
+Hosting & Vercel (Hobby plan). The Express app runs as a serverless function and
+\texttt{public/} is served from Vercel's CDN. Each push to GitHub redeploys. The key is set
+in Vercel's dashboard. \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-\paragraph{Where the data lives.} To keep the server stateless (Render's free tier sleeps and
-restarts), the browser owns the student's data. Each request sends the current state; the server
+\paragraph{Where the data lives.} To keep the server stateless (serverless functions start and
+stop on demand), the browser owns the student's data. Each request sends the current state; the server
 validates it (\texttt{cleanState}), lets the agent's tools modify it, and sends it back with the
 reply. The student's data never sits on my server, and a page refresh keeps everything.
 
@@ -198,8 +199,8 @@ to the student.
   \item \textbf{The key never reaches GitHub or the browser.} The server reads
         \texttt{GEMINI\_API\_KEY} from the environment. Locally that comes from a \texttt{.env}
         file that is listed in \texttt{.gitignore}; the repo only has \texttt{.env.example} with
-        an empty value. On Render the key is entered in the dashboard (\texttt{sync: false} in
-        \texttt{render.yaml}). Before publishing the class repo I scanned every file, including
+        an empty value. On Vercel the key is an encrypted environment variable in the project
+        settings. Before publishing the class repo I scanned every file, including
         PDFs and notebooks, for key patterns and redacted the ones I found.
   \item \textbf{Prompt injection.} After the week 6 video on agent hijacking, I treat uploaded
         text as untrusted. The syllabus is wrapped in \texttt{<syllabus\_document>} tags and the
@@ -211,7 +212,7 @@ to the student.
         validated (date format, enum types, length limits).
   \item \textbf{Human checkpoint.} Plans are proposals until the student accepts them.
   \item \textbf{Abuse limits.} 8 agent steps per request, 40 requests per IP per 10 minutes, a
-        4\,MB upload cap, and a strict Content-Security-Policy header (no inline scripts).
+        3\,MB upload cap, and a strict Content-Security-Policy header (no inline scripts).
         Agent replies are HTML-escaped before rendering.
 \end{itemize}
 
@@ -251,13 +252,13 @@ blocks for the midterm and explained the trade-off.}
 \section{Deployment}
 \begin{enumerate}
   \item The code is in my class repo:\\ \url{\appurl}
-  \item \texttt{render.yaml} at the repo root describes a free Node web service whose root
-        directory is \texttt{project-1-studypilot}. Render builds with \texttt{npm ci}, starts with
-        \texttt{npm start}, and health-checks \texttt{/api/health}.
-  \item In Render: \emph{New $\rightarrow$ Blueprint}, pick the repo, paste the Gemini key when
-        asked. Every push to \texttt{main} redeploys.
-  \item The app is live at \url{\liveurl}. The free tier sleeps after inactivity, so the
-        first request can take about 30 seconds.
+  \item Vercel detects Express on its own. \texttt{server.js} exports the \texttt{app}, which
+        Vercel runs as a serverless function, and the files in \texttt{public/} are served from
+        Vercel's CDN. Locally the same file calls \texttt{app.listen()} instead.
+  \item In Vercel: \emph{Add New $\rightarrow$ Project}, import the repo, set the root directory
+        to \texttt{project-1-studypilot}, and add \texttt{GEMINI\_API\_KEY} as an environment
+        variable. Every push to \texttt{main} redeploys.
+  \item The app is live at \url{\liveurl}.
 \end{enumerate}
 
 \section{Artifacts}
@@ -273,7 +274,6 @@ blocks for the midterm and explained the trade-off.}
 \texttt{public/app.js} & Client logic: state, \texttt{fetch} calls, rendering, uploads, quiz grading. \\
 \texttt{public/style.css} & Layout, light/dark theme, responsive rules. \\
 \texttt{public/sample.js} & Sample syllabus with dates relative to today (and an injection test line). \\
-\texttt{render.yaml} & Render deployment blueprint. \\
 \texttt{.env.example}, \texttt{.gitignore} & How to supply the key locally without committing it. \\
 \texttt{README.md} & Setup, architecture and safety notes. \\
 \texttt{report/} & This report (\LaTeX{} source and screenshots). \\
@@ -307,7 +307,7 @@ That makes the app useful and keeps it trustworthy.
   \item Google, ``Function calling with the Gemini API.''\\ \url{https://ai.google.dev/gemini-api/docs/function-calling}
   \item Google, Gen AI SDK for JavaScript (\texttt{@google/genai}).\\ \url{https://github.com/googleapis/js-genai}
   \item Express 5 documentation.\\ \url{https://expressjs.com/}
-  \item Render, ``Blueprint specification.''\\ \url{https://render.com/docs/blueprint-spec}
+  \item Vercel, ``Express on Vercel.''\\ \url{https://vercel.com/docs/frameworks/backend/express}
   \item Anthropic, ``Building effective agents.''\\ \url{https://www.anthropic.com/research/building-effective-agents}
   \item OWASP, ``LLM01: Prompt Injection.''\\ \url{https://genai.owasp.org/llmrisk/llm01-prompt-injection/}
   \item MDN Web Docs: Fetch API, FileReader, Web Storage.\\ \url{https://developer.mozilla.org/}

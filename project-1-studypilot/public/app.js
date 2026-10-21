@@ -141,7 +141,7 @@ function clearAttachment() {
 $('#file').addEventListener('change', (e) => {
   const f = e.target.files[0];
   if (!f) return;
-  if (f.size > 4 * 1024 * 1024) { alertInChat('That file is over 4 MB. Try a smaller PDF or paste the text.'); return; }
+  if (f.size > 3 * 1024 * 1024) { alertInChat('That file is over 3 MB. Try a smaller PDF or paste the text.'); return; }
   const reader = new FileReader();
   if (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')) {
     reader.onload = () => setAttachment({ name: f.name, mimeType: 'application/pdf', data: reader.result.split(',')[1] });

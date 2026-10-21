@@ -5,7 +5,7 @@ import { runAgent, cleanState } from './agent.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json({ limit: '6mb' }));
+app.use(express.json({ limit: '4.5mb' }));
 app.use((req, res, next) => {
   res.set({
     'Content-Security-Policy': "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:",
@@ -33,7 +33,7 @@ app.get('/api/health', (req, res) => res.json({ ok: true, model: process.env.MOD
 app.post('/api/agent', rateLimit, async (req, res) => {
   const { message, history, syllabus, state, today } = req.body || {};
   const day = /^\d{4}-\d{2}-\d{2}$/.test(today) ? today : new Date().toISOString().slice(0, 10);
-  if (syllabus?.data && syllabus.data.length > 5_500_000) return res.status(413).json({ error: 'PDF too large (max about 4 MB).' });
+  if (syllabus?.data && syllabus.data.length > 4_200_000) return res.status(413).json({ error: 'PDF too large (max 3 MB).' });
   try {
     const out = await runAgent({ message, history: Array.isArray(history) ? history : [], syllabus, state: cleanState(state), today: day });
     res.json(out);
@@ -44,5 +44,8 @@ app.post('/api/agent', rateLimit, async (req, res) => {
   }
 });
 
-app.set('trust proxy', 1); // Render sits behind a proxy; use the real client IP
-app.listen(PORT, () => console.log(`StudyPilot running on http://localhost:${PORT}`));
+app.set('trust proxy', 1); // Vercel sits behind a proxy; use the real client IP
+
+// On Vercel the exported app runs as a serverless function; locally we listen.
+if (!process.env.VERCEL) app.listen(PORT, () => console.log(`StudyPilot running on http://localhost:${PORT}`));
+export default app;

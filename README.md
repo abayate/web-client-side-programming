@@ -6,7 +6,7 @@ Coursework by **Anthony Bayate**, Kean University. Every lab, assignment and pro
 
 **[StudyPilot](project-1-studypilot/)** is an AI study-planning agent. You give it a syllabus (paste it or upload a PDF) and the agent pulls out every deadline, builds a day-by-day study plan, quizzes you, and re-plans when a quiz shows a weak topic. It runs on Node.js/Express with Google Gemini tool calling.
 
-- Live app: _coming soon (Render)_
+- Live app: https://studypilot-ab.vercel.app
 - Write-up: [`project-1-studypilot/report/`](project-1-studypilot/report/)
 
 ## All projects
