@@ -1,0 +1,228 @@
+LAB 5 - SECTION 6: OpenAI Agents SDK
+Anthony Bayate - TECH*3500*01
+
+LAB SUBMISSION REQUIREMENTS FOR THIS SECTION:
+  1. The completed examples/101-recipe-agent.ts file  -> included below
+  2. The modified package.json with the three new scripts -> included below
+Actual program output for all three examples is in task7_output.txt.
+
+==============================================================================
+FILE: package.json  (shows the three added scripts)
+==============================================================================
+{
+  "name": "ab-openai-agents-lab",
+  "version": "1.0.0",
+  "description": "Lab 5 Section 6 - OpenAI Agents SDK examples including the Recipe Agent capstone",
+  "type": "module",
+  "scripts": {
+    "examples:99-hello-world": "node --import=tsx examples/99-hello-world.ts",
+    "examples:100-functions": "node --import=tsx examples/100-functions.ts",
+    "examples:101-recipe-agent": "node --import=tsx examples/101-recipe-agent.ts"
+  },
+  "author": "Anthony Bayate",
+  "license": "ISC",
+  "dependencies": {
+    "@openai/agents": "^0.0.10",
+    "dotenv": "^17.2.0",
+    "zod": "3.25.67"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}
+
+==============================================================================
+FILE: examples/101-recipe-agent.ts  (THE CAPSTONE)
+==============================================================================
+// Lab 5, Section 6, Part 4: THE CAPSTONE CHALLENGE - Recipe Agent.
+// Anthony Bayate - TECH*3500*01
+//
+// Requirement: an agent that, asked "What do I need to make Spaghetti Carbonara?",
+// uses a custom get_recipe_ingredients tool to list the ingredients.
+//
+// The handout asks for a simple if/else on dishName. I kept that exact behaviour as the
+// contract (unknown dish -> the required "Sorry, I don't know the recipe for that dish."),
+// but backed it with a small lookup table and case-insensitive matching, because the
+// literal if/else fails the moment the model passes "spaghetti carbonara" in lowercase -
+// which it does, since users type it that way. I also added a second tool so the agent has
+// to actually choose between tools rather than only ever having one option.
+
+import dotenv from 'dotenv';
+import { z } from 'zod';
+import { Agent, run, tool } from '@openai/agents';
+
+dotenv.config({ override: true });
+
+// --- The recipe "database" -----------------------------------------------------
+
+const RECIPES: Record<string, { ingredients: string; minutes: number }> = {
+  'spaghetti carbonara': {
+    ingredients:
+      'Spaghetti, eggs, Pecorino Romano cheese, guanciale, and black pepper.',
+    minutes: 20,
+  },
+  'chicken adobo': {
+    ingredients:
+      'Chicken thighs, soy sauce, cane vinegar, garlic, bay leaves, whole black peppercorns, and steamed rice to serve.',
+    minutes: 45,
+  },
+  'margherita pizza': {
+    ingredients:
+      'Pizza dough, San Marzano tomatoes, fresh mozzarella, fresh basil, olive oil, and salt.',
+    minutes: 90,
+  },
+};
+
+// Normalizing the key is the whole reason this works when the model sends
+// "spaghetti carbonara" instead of "Spaghetti Carbonara".
+const normalize = (dish: string) => dish.trim().toLowerCase().replace(/\s+/g, ' ');
+
+// --- Tool 1: the required ingredients lookup -----------------------------------
+
+const getRecipeIngredientsTool = tool({
+  name: 'get_recipe_ingredients',
+  description: 'Get the list of ingredients needed to make a specific dish.',
+  parameters: z.object({
+    dishName: z.string().describe('The name of the dish, for example "Spaghetti Carbonara"'),
+  }),
+  execute: async ({ dishName }) => {
+    console.log(`  [tool] get_recipe_ingredients called with dishName="${dishName}"`);
+
+    const recipe = RECIPES[normalize(dishName)];
+    if (recipe) {
+      return recipe.ingredients;
+    }
+    return "Sorry, I don't know the recipe for that dish.";
+  },
+});
+
+// --- Tool 2: so the agent has a real choice to make ----------------------------
+
+const getCookTimeTool = tool({
+  name: 'get_cook_time',
+  description: 'Get the approximate total time in minutes needed to make a specific dish.',
+  parameters: z.object({
+    dishName: z.string().describe('The name of the dish, for example "Spaghetti Carbonara"'),
+  }),
+  execute: async ({ dishName }) => {
+    console.log(`  [tool] get_cook_time called with dishName="${dishName}"`);
+
+    const recipe = RECIPES[normalize(dishName)];
+    if (recipe) {
+      return `${dishName} takes about ${recipe.minutes} minutes from start to finish.`;
+    }
+    return "Sorry, I don't know how long that dish takes.";
+  },
+});
+
+// --- The agent -----------------------------------------------------------------
+
+const agent = new Agent({
+  name: 'Recipe Agent',
+  instructions:
+    'You are a helpful chef that can provide recipes. Use the get_recipe_ingredients tool ' +
+    'to look up what a dish requires, and the get_cook_time tool when the user asks how ' +
+    'long something takes. Never invent ingredients from your own knowledge - if a tool ' +
+    'says you do not know the dish, tell the user that plainly.',
+  tools: [getRecipeIngredientsTool, getCookTimeTool],
+});
+
+// --- Run -----------------------------------------------------------------------
+// Several questions, so the transcript shows the agent picking the right tool each time
+// and handling the unknown-dish path.
+
+const QUESTIONS = [
+  'What do I need to make Spaghetti Carbonara?',      // the required question
+  'How long does Spaghetti Carbonara take?',           // should choose the OTHER tool
+  'What do I need to make Chicken Adobo?',             // second known dish
+  'What do I need to make Beef Wellington?',           // unknown -> the fallback string
+];
+
+async function main() {
+  console.log('Running the Recipe Agent...\n');
+
+  for (const question of QUESTIONS) {
+    console.log('='.repeat(68));
+    console.log(`USER: ${question}`);
+    console.log('='.repeat(68));
+
+    const result = await run(agent, question);
+
+    console.log('--- Agent Final Output ---');
+    console.log(result.finalOutput);
+    console.log();
+  }
+}
+
+main().catch(console.error);
+
+==============================================================================
+FILE: examples/99-hello-world.ts
+==============================================================================
+// Lab 5, Section 6, Part 2: the "Hello World" agent.
+// Anthony Bayate - TECH*3500*01
+//
+// NOTE ON SETUP: the handout clones the whole openai-agents-js monorepo and imports from
+// '../packages/agents/dist/index.js'. I installed the published @openai/agents package
+// instead, so the import is just '@openai/agents' and there is no build step. Same SDK,
+// far less to download, and the run scripts in package.json work the same way.
+
+import dotenv from 'dotenv';
+import { Agent, run } from '@openai/agents';
+
+// Load environment variables from the .env file.
+// override: true so a stale machine-level OPENAI_API_KEY cannot shadow .env
+dotenv.config({ override: true });
+
+// The agent automatically finds OPENAI_API_KEY in the environment.
+const agent = new Agent({
+  name: 'Assistant',
+  instructions: 'You are a helpful assistant',
+});
+
+async function main() {
+  console.log('Running the Hello World agent...');
+  const result = await run(agent, 'Write a short, four-line poem about the deep ocean.');
+  console.log('--- Agent Final Output ---');
+  console.log(result.finalOutput);
+}
+
+main().catch(console.error);
+
+==============================================================================
+FILE: examples/100-functions.ts
+==============================================================================
+// Lab 5, Section 6, Part 3: the "Functions" example - giving an agent a tool.
+// Anthony Bayate - TECH*3500*01
+
+import dotenv from 'dotenv';
+import { z } from 'zod';
+import { Agent, run, tool } from '@openai/agents';
+
+dotenv.config({ override: true });
+
+const getWeatherTool = tool({
+  name: 'get_weather',
+  description: 'Get the weather for a given city',
+  parameters: z.object({ city: z.string() }),
+  execute: async ({ city }) => {
+    // This is a mock tool. In a real app you would call a weather API here.
+    console.log(`  [tool] get_weather called with city="${city}"`);
+    return `The weather in ${city} is sunny and 75F.`;
+  },
+});
+
+const agent = new Agent({
+  name: 'Data Agent',
+  instructions: 'You are a helpful data agent that can provide weather information.',
+  tools: [getWeatherTool],
+});
+
+async function main() {
+  console.log('Running the Functions agent...');
+  const result = await run(agent, 'What is the weather in Tokyo?');
+  console.log('--- Agent Final Output ---');
+  console.log(result.finalOutput);
+}
+
+main().catch(console.error);

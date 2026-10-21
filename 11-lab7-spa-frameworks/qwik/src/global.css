@@ -1,0 +1,14 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css";
+
+body { background: #f1f8f6; }
+h1 { font-size: 2.6rem; margin-bottom: 0; }
+.subtitle { margin-top: 4px; color: #555; }
+.nav-wrapper .right { padding-right: 8px; }
+.card .card-image img { height: 320px; object-fit: cover; }
+.card .card-content { height: 200px; overflow: hidden; }
+.card .card-title { background: linear-gradient(transparent, rgba(0,0,0,.75)); width: 100%; }
+.rating {
+  position: absolute; top: 10px; right: 10px;
+  background: #ffb300; color: #000; font-weight: bold;
+  padding: 2px 8px; border-radius: 12px;
+}

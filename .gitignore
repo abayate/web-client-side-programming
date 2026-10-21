@@ -1,0 +1,22 @@
+# Secrets: never commit API keys
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+.venv/
+venv/
+__pycache__/
+.next/
+dist/
+.vercel/
+.parcel-cache/
+.svelte-kit/
+
+# Editor / OS noise
+*.log
+.DS_Store
+Thumbs.db
+~$*
+.vscode/

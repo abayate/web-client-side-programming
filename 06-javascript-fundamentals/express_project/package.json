@@ -1,0 +1,29 @@
+{
+  "name": "voldemort-website",
+  "version": "1.0.0",
+  "description": "A dark and immersive website about Lord Voldemort - built with Express.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "voldemort",
+    "harry-potter",
+    "dark-lord",
+    "website"
+  ],
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

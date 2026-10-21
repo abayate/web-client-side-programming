@@ -1,0 +1,66 @@
+########## npm run examples:99-hello-world ##########
+◇ injected env (1) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Running the Hello World agent...
+--- Agent Final Output ---
+Beneath the waves where sunlight flees,  
+The deep ocean hums in midnight blue.  
+Silent mysteries in shadowed seas,  
+Await the dawn, forever new.
+
+########## npm run examples:100-functions ##########
+◇ injected env (1) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+Running the Functions agent...
+  [tool] get_weather called with city="Tokyo"
+--- Agent Final Output ---
+The weather in Tokyo is currently sunny with a temperature of 75°F.
+
+########## npm run examples:101-recipe-agent ##########
+◇ injected env (1) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+Running the Recipe Agent...
+
+====================================================================
+USER: What do I need to make Spaghetti Carbonara?
+====================================================================
+  [tool] get_recipe_ingredients called with dishName="Spaghetti Carbonara"
+--- Agent Final Output ---
+To make Spaghetti Carbonara, you will need the following ingredients:
+
+- Spaghetti
+- Eggs
+- Pecorino Romano cheese
+- Guanciale
+- Black pepper
+
+Let me know if you need a step-by-step recipe or cooking time!
+
+====================================================================
+USER: How long does Spaghetti Carbonara take?
+====================================================================
+  [tool] get_cook_time called with dishName="Spaghetti Carbonara"
+--- Agent Final Output ---
+Spaghetti Carbonara takes about 20 minutes to make from start to finish. If you need the recipe or ingredients, let me know!
+
+====================================================================
+USER: What do I need to make Chicken Adobo?
+====================================================================
+  [tool] get_recipe_ingredients called with dishName="Chicken Adobo"
+--- Agent Final Output ---
+To make Chicken Adobo, you'll need the following ingredients:
+
+- Chicken thighs
+- Soy sauce
+- Cane vinegar
+- Garlic
+- Bay leaves
+- Whole black peppercorns
+- Steamed rice to serve
+
+Let me know if you'd like the cooking steps!
+
+====================================================================
+USER: What do I need to make Beef Wellington?
+====================================================================
+  [tool] get_recipe_ingredients called with dishName="Beef Wellington"
+--- Agent Final Output ---
+I'm sorry, I don't have the ingredients for Beef Wellington. If you need a different recipe or more information, please let me know!
+

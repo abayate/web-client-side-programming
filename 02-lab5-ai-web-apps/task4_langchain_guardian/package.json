@@ -1,0 +1,17 @@
+{
+  "name": "ab-langchain-guardian-example",
+  "version": "1.0.0",
+  "description": "Lab 5 Task 4 - red team / guardian / worker pipeline with LangChain.js",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Anthony Bayate",
+  "license": "ISC",
+  "dependencies": {
+    "@langchain/core": "^0.3.64",
+    "@langchain/openai": "^0.6.1",
+    "dotenv": "^17.2.0"
+  }
+}

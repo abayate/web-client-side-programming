@@ -1,0 +1,19 @@
+{
+  "name": "ab-openai-modalities",
+  "version": "1.0.0",
+  "description": "Lab 5 Task 3 - exploring other modalities from the openai-node examples (image generation, speech, vision)",
+  "main": "image-generation.js",
+  "type": "module",
+  "scripts": {
+    "image": "node image-generation.js",
+    "speech": "node text-to-speech.js",
+    "vision": "node vision.js",
+    "all": "node image-generation.js && node text-to-speech.js && node vision.js"
+  },
+  "author": "Anthony Bayate",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "openai": "^5.10.1"
+  }
+}

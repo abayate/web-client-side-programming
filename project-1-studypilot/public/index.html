@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StudyPilot</title>
+  <meta name="description" content="StudyPilot: an AI agent that turns your syllabus into a study plan, quizzes you, and re-plans.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f5bd3'/%3E%3Cpath d='M9 22 16 8l7 14-7-4z' fill='white'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--accent)"/><path d="M9 22 16 8l7 14-7-4z" fill="#fff"/></svg>
+      <div>
+        <h1>StudyPilot</h1>
+        <p class="sub">AI study-planning agent · built by <strong>Anthony Bayate</strong></p>
+      </div>
+    </div>
+    <button id="reset" class="ghost" type="button" title="Clear all saved data">Reset</button>
+  </header>
+
+  <main class="layout">
+    <section class="chat" aria-label="Chat with the agent">
+      <div id="messages" class="messages" aria-live="polite"></div>
+
+      <form id="composer" class="composer">
+        <div id="attachment" class="attachment" hidden>
+          <span id="attachName"></span>
+          <button type="button" id="clearAttach" class="link" aria-label="Remove attachment">remove</button>
+        </div>
+        <textarea id="input" rows="2" placeholder="Paste a syllabus or ask: “plan my week, I have 3 hours a day”"></textarea>
+        <div class="composer-row">
+          <label class="ghost file-btn">
+            Attach syllabus
+            <input id="file" type="file" accept=".pdf,.txt,.md,text/plain,application/pdf" hidden>
+          </label>
+          <button type="button" id="sample" class="ghost">Use sample syllabus</button>
+          <span class="spacer"></span>
+          <button type="submit" id="send" class="primary">Send</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" aria-label="Your study data">
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="deadlines" class="tab active" aria-selected="true">Deadlines <span id="countDeadlines" class="badge">0</span></button>
+        <button role="tab" data-tab="plan" class="tab" aria-selected="false">Plan <span id="planDot" class="dot" hidden></span></button>
+        <button role="tab" data-tab="quiz" class="tab" aria-selected="false">Quiz <span id="quizDot" class="dot" hidden></span></button>
+      </nav>
+      <div id="tab-deadlines" class="tabpane"></div>
+      <div id="tab-plan" class="tabpane" hidden></div>
+      <div id="tab-quiz" class="tabpane" hidden></div>
+    </section>
+  </main>
+
+  <script src="sample.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

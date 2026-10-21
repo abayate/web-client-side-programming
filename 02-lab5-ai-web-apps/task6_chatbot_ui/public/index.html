@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer &mdash; RAG Chatbot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="dot"></span>
+            <div>
+                <h1>Resume Analyzer</h1>
+                <p>Lab 5, Task 6 &middot; LangChain RAG with a browser front end</p>
+            </div>
+        </div>
+        <span class="who">Anthony Bayate &middot; TECH*3500*01</span>
+    </header>
+
+    <main>
+        <!-- STEP 1: upload -->
+        <section id="upload-view" class="panel">
+            <h2>Upload a resume</h2>
+            <p class="lede">
+                The PDF is sent to the Node backend, split into chunks, embedded, and stored in an
+                in-memory vector store. Nothing is written to disk and your API key never leaves the server.
+            </p>
+
+            <form id="upload-form">
+                <div id="dropzone" class="dropzone" tabindex="0" role="button"
+                     aria-label="Choose a PDF resume, or drag one here">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="dz-icon">
+                        <path d="M12 16V4m0 0L8 8m4-4 4 4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+                    </svg>
+                    <p class="dz-title">Drop a PDF here, or click to browse</p>
+                    <p class="dz-sub">PDF only &middot; 10 MB max</p>
+                    <input type="file" id="file-input" name="resume" accept="application/pdf" hidden>
+                </div>
+
+                <p id="file-chosen" class="file-chosen" hidden></p>
+
+                <label class="field">
+                    <span>Role being hired for</span>
+                    <input type="text" id="role-input" name="role"
+                           value="a mid-level front-end engineer"
+                           placeholder="e.g. a junior data analyst">
+                </label>
+
+                <button type="submit" id="analyze-btn" class="btn btn-primary" disabled>
+                    Analyze Resume
+                </button>
+            </form>
+
+            <p id="upload-error" class="error" hidden></p>
+        </section>
+
+        <!-- STEP 2: loading -->
+        <section id="loading-view" class="panel loading" hidden>
+            <div class="spinner" aria-hidden="true"></div>
+            <h2>Analyzing&hellip;</h2>
+            <ul class="steps">
+                <li data-step="parse">Extracting text from the PDF</li>
+                <li data-step="embed">Chunking and embedding</li>
+                <li data-step="chains">Running the advocate, skeptic, and parser chains</li>
+                <li data-step="synth">Synthesizing the final recommendation</li>
+            </ul>
+        </section>
+
+        <!-- STEP 3: results + chat -->
+        <section id="results-view" hidden>
+            <div class="results-head panel">
+                <div>
+                    <h2 id="result-filename">resume.pdf</h2>
+                    <p id="result-meta" class="meta"></p>
+                </div>
+                <button id="new-upload-btn" class="btn btn-secondary">Analyze another</button>
+            </div>
+
+            <div class="grid">
+                <article class="panel card card-verdict">
+                    <h3>Final Recommendation</h3>
+                    <pre id="out-recommendation" class="verdict-text"></pre>
+                </article>
+
+                <article class="panel card">
+                    <h3><span class="tag tag-pro">Advocate</span> The case for hiring</h3>
+                    <div id="out-praise" class="prose"></div>
+                </article>
+
+                <article class="panel card">
+                    <h3><span class="tag tag-con">Skeptic</span> Gaps &amp; questions</h3>
+                    <div id="out-critique" class="prose"></div>
+                </article>
+
+                <article class="panel card" id="facts-card">
+                    <h3>Extracted facts</h3>
+                    <dl id="out-facts" class="facts"></dl>
+                </article>
+            </div>
+
+            <div class="panel chat">
+                <h3>Ask a follow-up</h3>
+                <p class="lede">
+                    Every question is answered by retrieving from this resume only &mdash; the same
+                    vector store built when you uploaded it.
+                </p>
+
+                <div id="chat-log" class="chat-log" aria-live="polite"></div>
+
+                <div class="suggestions" id="suggestions">
+                    <button type="button" class="chip">Does this candidate have testing experience?</button>
+                    <button type="button" class="chip">How many years of React specifically?</button>
+                    <button type="button" class="chip">Any employment gaps I should ask about?</button>
+                </div>
+
+                <form id="chat-form" class="chat-form">
+                    <input type="text" id="chat-input" placeholder="Ask something about this resume&hellip;"
+                           autocomplete="off">
+                    <button type="submit" id="chat-send" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

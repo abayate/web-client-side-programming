@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="./output.css" rel="stylesheet">
+  <title>Tailwind Anthony Bayate Example</title>
+</head>
+<body class="bg-gray-100 text-center">
+
+  <nav class="bg-purple-800 p-4 text-white">
+    <ul class="flex justify-center flex-wrap gap-x-6">
+      <li><a href="#home" class="hover:underline font-semibold">Home</a></li>
+      <li><a href="#playlists" class="hover:underline">Playlists</a></li>
+      <li><a href="#concerts" class="hover:underline">Concerts</a></li>
+      <li><a href="#contact" class="hover:underline">Contact</a></li>
+    </ul>
+  </nav>
+
+  <h1 id="home" class="text-3xl font-bold underline mt-10">
+    Hello CPS*5500! I'm Anthony Bayate.
+  </h1>
+  <p class="text-lg mt-2 text-gray-600">Life outside Kean: music is my escape from cybersecurity labs.</p>
+
+  <div class="container mx-auto mt-10">
+    <h2 class="text-4xl font-bold">My Music World</h2>
+
+    <div class="grid grid-cols-3 gap-4 mt-5">
+      <div class="bg-purple-500 text-white p-5 rounded">Hip-Hop</div>
+      <div class="bg-blue-500 text-white p-5 rounded">R&amp;B</div>
+      <div class="bg-pink-500 text-white p-5 rounded">Afrobeats</div>
+    </div>
+
+    <div id="playlists" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+      <div class="bg-yellow-500 p-5 rounded">Study Beats</div>
+      <div class="bg-indigo-500 text-white p-5 rounded">Workout Mix</div>
+      <div class="bg-teal-500 text-white p-5 rounded">Road Trip</div>
+      <div class="bg-orange-500 p-5 rounded">Throwbacks</div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mt-8">
+      <button class="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded m-1">Play</button>
+      <button class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded m-1">Shuffle</button>
+    </div>
+
+    <!-- Cards: favorite concerts / artists -->
+    <div id="concerts" class="flex flex-wrap justify-center gap-6 mt-10">
+      <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white text-left">
+        <img class="w-full h-40 object-cover" src="https://static.wixstatic.com/media/7383ad_c9a2ed5d32704d6b81504a4175fa440c~mv2.png/v1/fill/w_1500,h_1500,al_c/Kean%20College.png" alt="Concert">
+        <div class="px-6 py-4">
+          <div class="font-bold text-xl mb-2">Favorite Show</div>
+          <p class="text-gray-700 text-base">Catching live sets is one of my favorite ways to unwind after exams.</p>
+        </div>
+      </div>
+      <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white text-left">
+        <img class="w-full h-40 object-cover" src="https://static.wixstatic.com/media/7383ad_c9a2ed5d32704d6b81504a4175fa440c~mv2.png/v1/fill/w_1500,h_1500,al_c/Kean%20College.png" alt="Playlist">
+        <div class="px-6 py-4">
+          <div class="font-bold text-xl mb-2">Always on Repeat</div>
+          <p class="text-gray-700 text-base">My study playlist has gotten me through every CPS*5500 assignment.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form id="contact" class="max-w-sm mx-auto mt-10 text-left bg-white p-6 rounded shadow">
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+        <input type="email" id="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-6">
+        <label for="song" class="block text-gray-700 text-sm font-bold mb-2">Song request:</label>
+        <input type="text" id="song" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <button class="bg-purple-600 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+        Send
+      </button>
+    </form>
+  </div>
+
+  <footer class="bg-purple-800 p-4 text-white mt-10">
+    <p>&copy; 2026 Anthony Bayate Website | All Rights Reserved</p>
+  </footer>
+
+</body>
+</html>

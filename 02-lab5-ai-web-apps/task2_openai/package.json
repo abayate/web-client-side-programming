@@ -1,0 +1,18 @@
+{
+  "name": "ab-ai-web-lab",
+  "version": "1.0.0",
+  "description": "Lab 5 Task 2 - OpenAI chat completions, streaming, and a multi-model comparison",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "compare": "node compare-models.js"
+  },
+  "keywords": [],
+  "author": "Anthony Bayate",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "openai": "^5.10.1"
+  }
+}

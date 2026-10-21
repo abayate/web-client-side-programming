@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Defense - Tower Defense by Anthony Bayate</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>NEON DEFENSE</h1>
+  <p class="sub">A tower-defense game · HTML + CSS + JavaScript · by Anthony Bayate</p>
+</header>
+
+<main>
+  <div class="stage">
+    <canvas id="board" width="840" height="540"></canvas>
+    <div id="overlay" class="overlay">
+      <div class="card">
+        <h2>Defend the Core</h2>
+        <p>Enemies march along the neon path toward your core. Spend credits to build towers beside the path and stop them before they get through.</p>
+        <ul>
+          <li><b style="color:#4dffea">Pulse</b> – fast, cheap, reliable</li>
+          <li><b style="color:#ff9f4d">Cannon</b> – slow shots with area damage</li>
+          <li><b style="color:#7aa7ff">Frost</b> – slows enemies in range</li>
+          <li><b style="color:#ff4dd2">Sniper</b> – huge range and damage</li>
+        </ul>
+        <p>Click a tower to upgrade or sell it. Survive all 20 waves to win!</p>
+        <button id="startBtn">Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <div class="stats">
+      <div><span>Credits</span><b id="gold">0</b></div>
+      <div><span>Core HP</span><b id="lives">0</b></div>
+      <div><span>Wave</span><b id="wave">0</b>/20</div>
+      <div><span>Best wave</span><b id="best">0</b></div>
+    </div>
+
+    <h3>Build</h3>
+    <div id="shop"></div>
+
+    <h3>Selected tower</h3>
+    <div id="info" class="info">Click a tower on the map.</div>
+    <div class="row">
+      <button id="upgradeBtn" disabled>Upgrade</button>
+      <button id="sellBtn" disabled>Sell</button>
+    </div>
+
+    <h3>Controls</h3>
+    <div class="row">
+      <button id="waveBtn">Send Next Wave</button>
+      <button id="speedBtn">Speed ×1</button>
+    </div>
+    <div class="row"><button id="pauseBtn">Pause (P)</button></div>
+    <p class="hint">Keys: 1-4 choose tower · Space send wave · Esc deselect · P pause</p>
+    <div id="log" class="log"></div>
+  </aside>
+</main>
+<script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+◇ injected env (1) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+==============================================================================
+MULTI-MODEL COMPARISON - Lab 5, Task 2
+==============================================================================
+Prompt (identical for every model):
+  "Explain what "client-side AI" means to a first-year college student, then give one realistic example of when you should NOT use it. Keep the whole answer under 120 words."
+
+------------------------------------------------------------------------------
+MODEL              LATENCY   IN TOK  OUT TOK   EST. COST
+------------------------------------------------------------------------------
+gpt-4              3989 ms       45       79   $0.006090
+gpt-4o             2255 ms       44      104   $0.001150
+gpt-4o-mini        1630 ms       44      108   $0.000071
+gpt-4.1-mini       2677 ms       44      105   $0.000186
+------------------------------------------------------------------------------
+
+==============================================================================
+ANSWER FROM: gpt-4
+==============================================================================
+Client-side AI refers to artificial intelligence that operates on the user's device, like a laptop or smartphone, instead of on a remote server. It processes data locally, which can make apps run faster and keep data more private. However, you shouldn't use it for complex tasks that require a lot of computing power, like training large machine learning models, as this could overwhelm the user's device.
+
+==============================================================================
+ANSWER FROM: gpt-4o
+==============================================================================
+Client-side AI refers to artificial intelligence processes that run on the user's device (like a smartphone or laptop) rather than on a remote server. This approach enhances privacy and can reduce data transmission times. However, it typically relies on the device’s processing power and storage.
+
+**Example of when NOT to use it:** Avoid client-side AI for highly complex tasks like large-scale data analysis or training deep learning models. These tasks require significant computational resources that most personal devices can't handle efficiently, leading to slow performance and potential device overheating.
+
+==============================================================================
+ANSWER FROM: gpt-4o-mini
+==============================================================================
+"Client-side AI" refers to artificial intelligence processes that run on a user's device (like a smartphone or computer) rather than on a remote server. This allows for faster responses and better privacy since data doesn't need to be sent over the internet. 
+
+However, a realistic example of when NOT to use client-side AI is in complex data analysis tasks, such as processing large datasets or training deep learning models. These tasks require significant computational power and memory, which client devices often lack, making server-side AI a better choice for efficiency and performance.
+
+==============================================================================
+ANSWER FROM: gpt-4.1-mini
+==============================================================================
+Client-side AI means running artificial intelligence programs directly on your device (like your phone or laptop) instead of on a remote server. This allows faster responses and better privacy since data doesn’t leave your device. For example, a language translator app that works offline uses client-side AI.
+
+However, you should NOT use client-side AI for tasks requiring heavy computing power or large datasets, like training complex models or analyzing massive medical scans. Devices like phones can’t handle such work efficiently, and it’s better done on powerful cloud servers.
+
+==============================================================================
+SUMMARY
+==============================================================================
+Fastest response : gpt-4o-mini (1630 ms)
+Cheapest call    : gpt-4o-mini ($0.000071)
+Most verbose     : gpt-4o-mini (108 output tokens)
+Cost spread      : 85.3x between the most and least expensive model

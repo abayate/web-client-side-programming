@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foundation Example - Anthony Bayate</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css" crossorigin="anonymous">
+<style>
+  .callout-header { background:#0a0a23; color:#fff; padding: 2rem 1rem; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="callout-header">
+  <h1>Anthony Bayate</h1>
+  <p>Future Cybersecurity Professional &mdash; SOC Analyst / Penetration Tester Track</p>
+</div>
+
+<div class="grid-container">
+  <div class="grid-x grid-padding-x align-middle" style="margin-top:2rem;">
+    <div class="cell small-12 medium-6 large-4">
+      <h2>Career Goal</h2>
+      <p>I'm working toward a role as a Security Operations Center (SOC) Analyst, with a longer-term
+      goal of penetration testing. I'm currently studying network defense, incident response, and
+      scripting to get there.</p>
+    </div>
+    <div class="cell small-12 medium-6 large-4">
+      <div class="card">
+        <img src="https://static.wixstatic.com/media/7383ad_c9a2ed5d32704d6b81504a4175fa440c~mv2.png/v1/fill/w_1500,h_1500,al_c/Kean%20College.png" class="card-img-top" alt="Kean University">
+        <div class="card-section">
+          <h5 class="card-title">Target Skills</h5>
+          <p class="card-text">SIEM tools, Linux hardening, network monitoring, and Python scripting for automation.</p>
+        </div>
+      </div>
+    </div>
+    <div class="cell small-12 medium-6 large-4">
+      <div class="card">
+        <img src="https://static.wixstatic.com/media/7383ad_c9a2ed5d32704d6b81504a4175fa440c~mv2.png/v1/fill/w_1500,h_1500,al_c/Kean%20College.png" class="card-img-top" alt="Kean University">
+        <div class="card-section">
+          <h5 class="card-title">Certifications I'm Pursuing</h5>
+          <p class="card-text">CompTIA Security+, Network+, and eventually a hands-on OSCP.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-x grid-padding-x align-middle" style="margin-top:2rem;">
+    <div class="cell small-12 medium-4">
+      <a href="#" class="button">Resume</a>
+      <a href="#" class="button alert">Weak Skills to Improve</a>
+      <a href="#" class="button success">Strong Skills</a>
+    </div>
+    <div class="cell small-12 medium-8">
+      <form>
+        <label>Email:
+          <input type="email" placeholder="Enter your email">
+        </label>
+        <label>What company would you refer me to?
+          <input type="text" placeholder="Company name">
+        </label>
+        <button type="submit" class="button">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="grid-x grid-padding-x align-middle" style="margin-top:1rem; margin-bottom:2rem;">
+    <div class="cell small-12">
+      <button type="button" class="button" data-open="careerModal">Why Cybersecurity?</button>
+      <div class="reveal" id="careerModal" data-reveal>
+        <h1>My Motivation</h1>
+        <p class="lead">I want to help protect organizations from real-world threats and keep building
+        my technical skill set every semester at Kean.</p>
+        <button class="close-button" data-close aria-label="Close modal" type="button">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+<script>
+  $(document).foundation();
+</script>
+</body>
+</html>

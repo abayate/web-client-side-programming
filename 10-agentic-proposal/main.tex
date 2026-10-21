@@ -1,0 +1,232 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{titlesec}
+
+\hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\setlist{itemsep=2pt, topsep=4pt}
+
+\title{Project 1: Agentic App Research and Project 2 Proposal}
+\author{Anthony Bayate\\Kean University \,--\, Web Client-Side Programming}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+An AI agent differs from a plain chatbot in one way: it does not just answer, it
+\emph{acts}. It is given a goal, decides which tools to call (search, read a file,
+run code, call an API), looks at what came back, and keeps going until the goal is
+met or it needs a human. Below I look at five existing AI-native apps that use at
+least one agent, and for each I describe how the agent is built in, why the app
+needs it, and what it actually does. After that I propose my own web app for
+Project 2.
+
+\section{Five Existing Agentic Apps}
+
+\subsection{Cursor (agent mode)}
+\textbf{What it does.} Cursor is a code editor built on VS Code. In agent mode you
+describe a task (``add a login page and wire it to the API'') and the agent plans
+the change, reads the relevant files, edits several files, runs terminal commands,
+and reads the errors that come back.
+
+\textbf{How it is integrated.} The agent lives inside the editor, so its tools are
+editor features: file search, file read/write, a terminal, and the linter output.
+The model calls these tools in a loop, and every edit is shown as a diff that the
+developer accepts or rejects.
+
+\textbf{Why it is needed.} A normal autocomplete suggestion only sees the line you
+are typing. Real features touch many files, and the developer would otherwise do the
+searching and copy-pasting by hand. The agent removes that busywork and uses the
+compiler and test errors to correct itself.
+
+\subsection{GitHub Copilot coding agent}
+\textbf{What it does.} You assign a GitHub issue to Copilot. It spins up a
+sandboxed environment, works on the repository, and opens a pull request with its
+changes for you to review.
+
+\textbf{How it is integrated.} It is wired into GitHub itself: issues are the input,
+Actions-style runners are the sandbox, and the pull request is the output. The
+review step is where the human stays in control.
+
+\textbf{Why it is needed.} Many issues are small and well described (fix a bug, add
+a test, update a dependency). Handing those off lets a developer spend time on the
+design work instead. Running asynchronously in a sandbox also means a mistake cannot
+touch the main branch.
+
+\subsection{Perplexity (research and Deep Research)}
+\textbf{What it does.} Perplexity answers questions with cited sources. In its deep
+research mode, the agent breaks a question into sub-questions, runs many searches,
+reads the pages, and writes a structured report with links.
+
+\textbf{How it is integrated.} Search is the core tool, not an add-on. The model
+decides what to search next based on what it has already read, then synthesizes the
+result and attaches citations.
+
+\textbf{Why it is needed.} A single search or a single model call cannot cover a
+broad question, and a model without search can be out of date or make things up.
+The agent loop gives fresher answers and lets the user check the sources.
+
+\subsection{Devin (Cognition)}
+\textbf{What it does.} Devin is marketed as an autonomous software engineering
+agent. It gets a task in a chat or from a ticket, then works in its own environment
+with a shell, a code editor, and a browser. It can set up a project, write code, run
+tests, and report back.
+
+\textbf{How it is integrated.} Instead of living in an existing tool, Devin is the
+workspace: the user watches a timeline of its commands and can step in with
+feedback.
+
+\textbf{Why it is needed.} It is aimed at longer tasks that take many steps, such
+as migrations or repetitive refactors, where the main cost is a person's time rather
+than difficulty. The tradeoff is that long autonomous runs need good visibility and
+review so mistakes are caught.
+
+\subsection{Claude Code}
+\textbf{What it does.} Claude Code is a terminal-based coding agent. It reads a
+codebase, edits files, runs commands and tests, and uses git. It can also call
+outside tools through MCP servers and hand pieces of work to subagents.
+
+\textbf{How it is integrated.} It runs in the developer's own terminal and
+project folder with a permission system: reading is easy, but running commands or
+editing files can require approval. Project instructions live in a plain
+\texttt{CLAUDE.md} file.
+
+\textbf{Why it is needed.} A lot of development happens outside an editor window,
+in scripts, builds, and git. An agent with shell access can do that whole loop of
+change, run, read the error, and fix, while the permission model keeps the user in
+charge of risky actions.
+
+\subsection{What these apps have in common}
+\begin{itemize}
+  \item \textbf{A goal, not a prompt.} The user states an outcome and the agent
+        works out the steps.
+  \item \textbf{Tools.} Each one gets its power from tools (files, shell, search,
+        APIs) rather than from the model alone.
+  \item \textbf{Feedback loop.} Errors, test results, and search results go back
+        into the model so it can correct course.
+  \item \textbf{A human checkpoint.} Diffs, pull requests, and permission prompts
+        keep a person in the loop for anything that matters.
+\end{itemize}
+
+\section{My Proposal for Project 2: StudyPilot}
+
+\subsection{The problem}
+College students juggle syllabi, assignment deadlines, and exams across several
+classes, and the information is scattered over PDFs, LMS pages, and emails. Most
+students build a plan by hand once and then abandon it when the semester gets busy.
+A chatbot can give generic study advice, but it does not know \emph{my} deadlines
+and cannot adjust when my week changes.
+
+\subsection{The idea}
+StudyPilot is a web app where a student uploads their course syllabi (or pastes
+assignment lists). An AI agent turns that into a living weekly study plan, quizzes
+the student on the material, and re-plans when something changes (a missed session,
+a new due date, a low quiz score).
+
+\subsection{What the agent does}
+The agent receives a goal such as ``get me ready for Friday's midterm'' and chooses
+among its tools:
+\begin{enumerate}
+  \item \textbf{Parse syllabus:} extract courses, due dates, exam dates, and weights
+        into structured data.
+  \item \textbf{Plan:} place study blocks on a calendar based on how much time the
+        student has and how heavy each deadline is.
+  \item \textbf{Quiz:} generate practice questions from the student's own notes and
+        grade the answers.
+  \item \textbf{Re-plan:} if quiz scores are weak or a block is skipped, move time
+        toward the weak topic and update the calendar.
+  \item \textbf{Ask:} when information is missing or a choice is ambiguous (for
+        example, two exams the same day), ask the student instead of guessing.
+\end{enumerate}
+
+\subsection{Why an agent and not just a chatbot}
+The task is a loop. The plan depends on quiz results, and quiz results change the
+plan. A single prompt cannot do that because it has no way to read the calendar,
+write to it, or remember what happened last week. Tool use plus state is the
+reason this needs an agent.
+
+\subsection{Proposed architecture}
+\begin{center}
+\begin{tabular}{@{}p{0.2\linewidth}p{0.7\linewidth}@{}}
+\toprule
+\textbf{Layer} & \textbf{Plan} \\
+\midrule
+Front end & HTML, CSS, and JavaScript (possibly React): upload page, weekly
+calendar view, quiz view, chat panel showing the agent's actions. \\
+Back end & Node.js/Express server. The API key stays on the server and is never
+shipped to the browser. \\
+Agent & An LLM API with function (tool) calling; a loop that runs tools until the
+goal is met or the user is needed. \\
+Tools & \texttt{parse\_syllabus}, \texttt{get\_calendar}, \texttt{add\_study\_block},
+\texttt{generate\_quiz}, \texttt{grade\_answer}, \texttt{ask\_user}. \\
+Storage & A database for courses, deadlines, plans, and quiz history. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Safety and limits}
+\begin{itemize}
+  \item The agent proposes calendar changes and the student confirms them before
+        anything is saved.
+  \item Uploaded files are used only for that student's plan.
+  \item Every tool call is logged and visible in the UI, so the student can see what
+        the agent did and why.
+  \item Limits on steps per run to avoid runaway loops and unexpected API costs.
+\end{itemize}
+
+\subsection{Milestones}
+\begin{enumerate}
+  \item Basic web UI and server with one LLM call (syllabus to JSON).
+  \item Add tool calling and the planning loop.
+  \item Add quizzes, grading, and re-planning.
+  \item Polish the UI, add confirmations and logging, and test with real syllabi.
+\end{enumerate}
+
+\subsection{How I will know it works}
+I will test it with real syllabi from my own classes and check three things: the
+extracted dates match the documents, the plan has no conflicts, and the re-plan
+actually shifts time after a poor quiz score.
+
+\section{Conclusion}
+The five apps above all follow the same pattern: a goal, a set of tools, a feedback
+loop, and a human checkpoint. StudyPilot applies that pattern to a problem I deal
+with every semester, and it is small enough to build in the time available.
+
+\section*{References}
+\small
+\textbf{Blogs and documentation}
+\begin{enumerate}[label={[\arabic*]}]
+  \item Anthropic, ``Building effective agents.''
+        \url{https://www.anthropic.com/research/building-effective-agents}
+  \item Cursor documentation (Agent mode). \url{https://cursor.com/docs}
+  \item GitHub Docs, ``About Copilot coding agent.''
+        \url{https://docs.github.com/en/copilot}
+  \item Perplexity, ``Introducing Perplexity Deep Research.''
+        \url{https://www.perplexity.ai/hub/blog/introducing-perplexity-deep-research}
+  \item Cognition, ``Introducing Devin.'' \url{https://cognition.ai/blog/introducing-devin}
+  \item Anthropic, Claude Code documentation.
+        \url{https://docs.anthropic.com/en/docs/claude-code/overview}
+  \item OpenAI, ``Function calling'' guide.
+        \url{https://platform.openai.com/docs/guides/function-calling}
+\end{enumerate}
+\textbf{GitHub repositories}
+\begin{enumerate}[label={[\arabic*]}, resume]
+  \item Anthropic, Claude Code. \url{https://github.com/anthropics/claude-code}
+  \item OpenAI Agents SDK (Python). \url{https://github.com/openai/openai-agents-python}
+\end{enumerate}
+\textbf{Videos and courses}
+\begin{enumerate}[label={[\arabic*]}, resume]
+  \item Kaggle \& Google, 5-Day AI Agents Intensive course podcast (YouTube).
+        \url{https://www.youtube.com/watch?v=cbzmr7vt4XA}
+  \item Kaggle \& Google, 5-Day AI Agents Intensive / Vibe Coding course.
+        \url{https://www.kaggle.com/competitions/5-day-ai-agents-intensive-vibecoding-course-with-google}
+\end{enumerate}
+
+\end{document}

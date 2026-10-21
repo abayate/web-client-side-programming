@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: studypilot-ab
+    runtime: node
+    plan: free
+    rootDir: project-1-studypilot
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false   # set in the Render dashboard, never in git
+      - key: MODEL
+        value: gemini-flash-latest

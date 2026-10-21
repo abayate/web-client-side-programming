@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies | Anthony Bayate</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link href="/src/style.css" rel="stylesheet">
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <nav class="teal darken-2">
+    <div class="nav-wrapper container">
+      <span class="brand-logo">TV Show Finder</span>
+      <span class="right hide-on-small-only">Anthony Bayate &middot; Vanilla JS</span>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Movies</h1>
+    <p class="subtitle">Built by <strong>Anthony Bayate</strong> with plain JavaScript + Vite</p>
+
+    <form id="search-form" class="row">
+      <div class="input-field col s9">
+        <input id="search" type="text" placeholder="Search TV shows (e.g. batman)">
+      </div>
+      <div class="input-field col s3">
+        <button class="btn teal" type="submit">Search</button>
+      </div>
+    </form>
+
+    <div id="loading" class="progress"><div class="indeterminate"></div></div>
+    <div id="error" class="card-panel red lighten-4" style="display: none;"></div>
+    <p id="count" class="grey-text"></p>
+    <div class="row" id="movies"></div>
+  </div>
+</body>
+</html>

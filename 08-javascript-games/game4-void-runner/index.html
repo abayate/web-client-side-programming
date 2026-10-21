@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Void Runner - Anthony Bayate</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; min-height: 100vh; background: #02040a; color: #cfe; font-family: 'Rajdhani', sans-serif;
+         display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  h1 { margin: 6px; letter-spacing: 8px; color: #7dffe0; text-shadow: 0 0 16px #00ffc8; }
+  canvas { background: #000; border: 2px solid #1b6d63; box-shadow: 0 0 40px rgba(0,255,200,.25); max-width: 96vw; }
+  .credit { font-size: 13px; margin: 8px; color: #6aa; }
+  .added { max-width: 760px; font-size: 13px; color: #8bb; text-align: center; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h1>VOID RUNNER</h1>
+<canvas id="c" width="760" height="520"></canvas>
+<div class="credit">Created by Anthony Bayate · Kean University · Space / ↑ jump (double-jump) · Shift dash · P pause</div>
+<div class="added"><b>Added features (Task 7):</b> double-jump, dash with invulnerability, coin combo multiplier, near-miss bonus, magnet &amp; slow-time power-ups, three obstacle types (spikes, drones, laser gates), difficulty ramp, parallax backdrop, persistent best score.</div>
+<script>
+// Void Runner: endless side-scroller. LLM-assisted base game, then extended with extra mechanics.
+const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height, GROUND = H - 70, G = 0.7;
+let audio; const beep = (f, d = .08, t = 'square', v = .04) => { if (!audio) return; const o = audio.createOscillator(), g = audio.createGain(); o.type = t; o.frequency.value = f; g.gain.setValueAtTime(v, audio.currentTime); g.gain.exponentialRampToValueAtTime(.0001, audio.currentTime + d); o.connect(g); g.connect(audio.destination); o.start(); o.stop(audio.currentTime + d); };
+
+let state = 'start', keys = {}, t = 0, speed, dist, coinsCol, combo, comboT, score, p, obs, coins, pups, parts, spawnObs, spawnCoin, spawnPup, shake = 0;
+let best = +localStorage.getItem('voidRunnerBest') || 0;
+
+function reset() {
+  speed = 6; dist = 0; coinsCol = 0; combo = 1; comboT = 0; score = 0; t = 0;
+  p = { x: 140, y: GROUND - 44, w: 34, h: 44, vy: 0, jumps: 0, dash: 0, dashCD: 0, invuln: 0, magnet: 0, slow: 0 };
+  obs = []; coins = []; pups = []; parts = []; spawnObs = 60; spawnCoin = 40; spawnPup = 600; state = 'play';
+}
+const hit = (a, b) => a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+const burst = (x, y, c, n = 10) => { for (let i = 0; i < n; i++) parts.push({ x, y, vx: (Math.random() - .5) * 7, vy: (Math.random() - .5) * 7, l: 28, c }); };
+
+function jump() {
+  if (state !== 'play') return;
+  if (p.jumps < 2) { p.vy = p.jumps === 0 ? -13.5 : -12; p.jumps++; beep(p.jumps === 1 ? 520 : 760, .1, 'triangle'); burst(p.x + 17, p.y + 44, '#7dffe0', 6); }
+}
+function dash() { if (state === 'play' && p.dashCD <= 0) { p.dash = 14; p.invuln = 22; p.dashCD = 90; beep(200, .2, 'sawtooth'); } }
+
+function spawnObstacle() {
+  const r = Math.random(), x = W + 40;
+  if (r < .45) { const n = 1 + (Math.random() * 2 | 0); obs.push({ k: 'spike', x, y: GROUND - 34, w: 30 * n, h: 34 }); }
+  else if (r < .8) { obs.push({ k: 'drone', x, y: GROUND - 90 - Math.random() * 90, w: 40, h: 28, ph: Math.random() * 6, vx: 1.5 }); }
+  else { // laser gate: must jump over the lower beam or be dashing
+    obs.push({ k: 'laser', x, y: GROUND - 120, w: 14, h: 120, on: true, ph: 0 });
+  }
+}
+function spawnCoinRow() {
+  const y = GROUND - 40 - Math.random() * 130, n = 3 + (Math.random() * 4 | 0);
+  for (let i = 0; i < n; i++) coins.push({ x: W + 30 + i * 36, y: y - Math.sin(i / (n - 1) * Math.PI) * 30, r: 9 });
+}
+
+function update() {
+  t++;
+  const sf = p.slow > 0 ? .55 : 1, sp = speed * sf;
+  speed = Math.min(15, 6 + dist / 1800);
+  dist += sp; score = Math.floor(dist / 10) + coinsCol * 10;
+
+  // player
+  if (p.dash > 0) { p.dash--; p.vy = 0; } else p.vy += G;
+  p.y += p.vy;
+  if (p.y + p.h >= GROUND) { p.y = GROUND - p.h; p.vy = 0; p.jumps = 0; }
+  if (p.dashCD > 0) p.dashCD--; if (p.invuln > 0) p.invuln--; if (p.magnet > 0) p.magnet--; if (p.slow > 0) p.slow--;
+  if (comboT > 0) { if (--comboT === 0) combo = 1; }
+
+  // spawning
+  if (--spawnObs <= 0) { spawnObstacle(); spawnObs = Math.max(34, 90 - speed * 4 + Math.random() * 40); }
+  if (--spawnCoin <= 0) { spawnCoinRow(); spawnCoin = 90 + Math.random() * 90; }
+  if (--spawnPup <= 0) { pups.push({ k: Math.random() < .5 ? 'magnet' : 'slow', x: W + 30, y: GROUND - 60 - Math.random() * 100, r: 14 }); spawnPup = 600 + Math.random() * 500; }
+
+  obs.forEach(o => { o.x -= sp + (o.vx || 0) * sf; if (o.k === 'drone') o.y += Math.sin(t / 15 + o.ph) * 1.6; if (o.k === 'laser') { o.ph++; o.on = (o.ph % 120) < 80; } });
+  coins.forEach(c => { c.x -= sp; if (p.magnet > 0) { const dx = p.x + 17 - c.x, dy = p.y + 22 - c.y, d = Math.hypot(dx, dy); if (d < 220) { c.x += dx / d * 7; c.y += dy / d * 7; } } });
+  pups.forEach(u => u.x -= sp);
+  obs = obs.filter(o => { if (o.x + o.w < -20) { if (!o.hit && !o.near) {} return false; } return true; });
+  coins = coins.filter(c => c.x > -20); pups = pups.filter(u => u.x > -20);
+
+  // collisions
+  const box = { x: p.x + 4, y: p.y + 4, w: p.w - 8, h: p.h - 6 };
+  for (const o of obs) {
+    const b = o.k === 'spike' ? { x: o.x + 4, y: o.y + 6, w: o.w - 8, h: o.h - 6 } : o;
+    if (o.k === 'laser' && !o.on) continue;
+    if (hit(box, b)) {
+      if (p.invuln > 0) { if (!o.dashed) { o.dashed = true; score += 25; coinsCol += 1; burst(o.x, o.y + o.h / 2, '#ffd34d', 14); beep(900, .1); } continue; }
+      return die();
+    }
+    // near-miss bonus: passed very close above/below without touching
+    if (!o.near && o.x + o.w < p.x && !o.dashed) { o.near = true; const gap = Math.abs((p.y + p.h) - o.y); if (gap < 14 && p.y + p.h < GROUND - 2) { combo = Math.min(8, combo + 1); comboT = 180; burst(p.x, p.y, '#ff6bf0', 10); } }
+  }
+  coins = coins.filter(c => {
+    if (Math.hypot(c.x - (p.x + 17), c.y - (p.y + 22)) < c.r + 20) { coinsCol += combo; combo = Math.min(8, combo + 1); comboT = 150; beep(900 + combo * 60, .06, 'triangle'); burst(c.x, c.y, '#ffd34d', 4); return false; } return true;
+  });
+  pups = pups.filter(u => {
+    if (Math.hypot(u.x - (p.x + 17), u.y - (p.y + 22)) < u.r + 22) { if (u.k === 'magnet') p.magnet = 600; else p.slow = 360; beep(1200, .2, 'sine'); return false; } return true;
+  });
+  parts.forEach(q => { q.x += q.vx; q.y += q.vy; q.l--; }); parts = parts.filter(q => q.l > 0);
+  if (shake > 0) shake--;
+}
+function die() { state = 'over'; shake = 14; burst(p.x + 17, p.y + 22, '#ff4d6d', 40); beep(80, .5, 'sawtooth', .1); if (score > best) { best = score; localStorage.setItem('voidRunnerBest', best); } }
+
+// ---------- draw ----------
+const stars = Array.from({ length: 70 }, () => ({ x: Math.random() * W, y: Math.random() * GROUND, z: Math.random() * 2 + .3 }));
+function draw() {
+  ctx.save(); if (shake > 0) ctx.translate((Math.random() - .5) * shake, (Math.random() - .5) * shake);
+  const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#02030a'); g.addColorStop(1, '#0a1f2e'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  stars.forEach(s => { if (state === 'play') { s.x -= s.z * (speed / 4); if (s.x < 0) { s.x = W; s.y = Math.random() * GROUND; } } ctx.fillStyle = `rgba(200,255,255,${s.z / 2.4})`; ctx.fillRect(s.x, s.y, s.z, s.z); });
+  // far mountains (parallax)
+  ctx.fillStyle = '#0a2433'; for (let i = -1; i < 8; i++) { const x = i * 140 - (dist * .15 % 140); ctx.beginPath(); ctx.moveTo(x, GROUND); ctx.lineTo(x + 70, GROUND - 90 - (i * 37 % 40)); ctx.lineTo(x + 140, GROUND); ctx.fill(); }
+  // ground
+  ctx.fillStyle = '#06161f'; ctx.fillRect(0, GROUND, W, H - GROUND);
+  ctx.strokeStyle = '#1be2c1'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(W, GROUND); ctx.stroke();
+  ctx.strokeStyle = 'rgba(27,226,193,.25)'; for (let x = -(dist % 40); x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x, GROUND); ctx.lineTo(x - 30, H); ctx.stroke(); }
+
+  if (state !== 'start') {
+    obs.forEach(o => {
+      if (o.k === 'spike') { ctx.fillStyle = '#ff4d6d'; ctx.shadowColor = '#ff4d6d'; ctx.shadowBlur = 10; for (let x = o.x; x < o.x + o.w; x += 30) { ctx.beginPath(); ctx.moveTo(x, o.y + o.h); ctx.lineTo(x + 15, o.y); ctx.lineTo(x + 30, o.y + o.h); ctx.fill(); } }
+      if (o.k === 'drone') { ctx.fillStyle = '#b36bff'; ctx.shadowColor = '#b36bff'; ctx.shadowBlur = 12; ctx.fillRect(o.x, o.y, o.w, o.h); ctx.fillStyle = '#fff'; ctx.fillRect(o.x + 6, o.y + 9, 8, 6); ctx.fillRect(o.x + 26, o.y + 9, 8, 6); }
+      if (o.k === 'laser') { ctx.fillStyle = '#555'; ctx.shadowBlur = 0; ctx.fillRect(o.x, GROUND - 120, o.w, 14); ctx.fillRect(o.x, GROUND - 14, o.w, 14); if (o.on) { ctx.fillStyle = '#ff2e63'; ctx.shadowColor = '#ff2e63'; ctx.shadowBlur = 16; ctx.fillRect(o.x + 4, GROUND - 106, o.w - 8, 92); } }
+      ctx.shadowBlur = 0;
+    });
+    coins.forEach(c => { ctx.fillStyle = '#ffd34d'; ctx.shadowColor = '#ffd34d'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(c.x, c.y, c.r * (.8 + Math.sin(t / 8 + c.x) * .1), 0, 7); ctx.fill(); ctx.shadowBlur = 0; });
+    pups.forEach(u => { const col = u.k === 'magnet' ? '#ff6bf0' : '#6bb7ff'; ctx.strokeStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 14; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(u.x, u.y, u.r, 0, 7); ctx.stroke(); ctx.fillStyle = col; ctx.font = 'bold 14px Rajdhani'; ctx.textAlign = 'center'; ctx.fillText(u.k === 'magnet' ? 'M' : 'T', u.x, u.y + 5); ctx.shadowBlur = 0; });
+    // player
+    if (state === 'play' || state === 'paused') {
+      ctx.globalAlpha = p.invuln > 0 ? .55 : 1;
+      if (p.dash > 0) { ctx.fillStyle = 'rgba(125,255,224,.25)'; for (let i = 1; i < 5; i++) ctx.fillRect(p.x - i * 18, p.y, p.w, p.h); }
+      ctx.fillStyle = '#7dffe0'; ctx.shadowColor = '#00ffc8'; ctx.shadowBlur = 14; ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.fillStyle = '#012'; ctx.fillRect(p.x + 18, p.y + 8, 12, 8); ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+      if (p.magnet > 0) { ctx.strokeStyle = 'rgba(255,107,240,.5)'; ctx.beginPath(); ctx.arc(p.x + 17, p.y + 22, 60 + Math.sin(t / 6) * 5, 0, 7); ctx.stroke(); }
+    }
+    parts.forEach(q => { ctx.globalAlpha = q.l / 28; ctx.fillStyle = q.c; ctx.fillRect(q.x, q.y, 4, 4); }); ctx.globalAlpha = 1;
+    // HUD
+    ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; ctx.font = '700 22px Rajdhani'; ctx.fillText(`SCORE ${score}`, 16, 30);
+    ctx.fillStyle = '#ffd34d'; ctx.fillText(`COINS ${coinsCol}`, 16, 54);
+    ctx.fillStyle = '#9ff'; ctx.font = '500 14px Rajdhani'; ctx.fillText(`BEST ${best}`, 16, 74);
+    ctx.textAlign = 'right'; ctx.fillStyle = combo > 1 ? '#ff6bf0' : '#567'; ctx.font = '700 24px Rajdhani'; ctx.fillText(`COMBO x${combo}`, W - 16, 30);
+    ctx.font = '500 14px Rajdhani'; ctx.fillStyle = p.dashCD <= 0 ? '#7dffe0' : '#567'; ctx.fillText(p.dashCD <= 0 ? 'DASH READY' : 'DASH...', W - 16, 52);
+    if (p.magnet > 0) { ctx.fillStyle = '#ff6bf0'; ctx.fillText(`MAGNET ${(p.magnet / 60).toFixed(1)}s`, W - 16, 70); }
+    if (p.slow > 0) { ctx.fillStyle = '#6bb7ff'; ctx.fillText(`SLOW-TIME ${(p.slow / 60).toFixed(1)}s`, W - 16, 88); }
+  }
+  ctx.shadowBlur = 0; ctx.textAlign = 'center';
+  if (state === 'start') { ctx.fillStyle = '#7dffe0'; ctx.font = '700 56px Rajdhani'; ctx.fillText('VOID RUNNER', W / 2, 190); ctx.fillStyle = '#cfe'; ctx.font = '500 20px Rajdhani'; ctx.fillText('Jump (twice!) over spikes, dodge drones, dash through laser gates.', W / 2, 235); ctx.fillText('Chain coins for a combo multiplier. Grab M (magnet) and T (slow-time).', W / 2, 262); ctx.fillStyle = '#ffd34d'; ctx.font = '700 26px Rajdhani'; ctx.fillText(`Best: ${best}`, W / 2, 310); ctx.fillStyle = '#fff'; ctx.fillText('Press SPACE or click to start', W / 2, 360); ctx.fillStyle = '#6aa'; ctx.font = '500 15px Rajdhani'; ctx.fillText('by Anthony Bayate', W / 2, 400); }
+  if (state === 'over') { ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#ff4d6d'; ctx.font = '700 54px Rajdhani'; ctx.fillText('SIGNAL LOST', W / 2, 200); ctx.fillStyle = '#fff'; ctx.font = '700 28px Rajdhani'; ctx.fillText(`Score ${score}   ·   Best ${best}`, W / 2, 250); ctx.font = '500 20px Rajdhani'; ctx.fillText('Press SPACE or click to run again', W / 2, 300); }
+  if (state === 'paused') { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(0, 0, W, H); ctx.fillStyle = '#ffd34d'; ctx.font = '700 48px Rajdhani'; ctx.fillText('PAUSED', W / 2, 260); }
+  ctx.restore();
+}
+function loop() { if (state === 'play') update(); draw(); requestAnimationFrame(loop); }
+function action() { if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)(); if (state === 'start' || state === 'over') reset(); else jump(); }
+addEventListener('keydown', e => {
+  if (e.repeat) return;
+  if ([' ', 'ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
+  keys[e.key] = true;
+  if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w') action();
+  if (e.key === 'Shift') dash();
+  if (e.key === 'p' || e.key === 'P') state = state === 'play' ? 'paused' : state === 'paused' ? 'play' : state;
+});
+addEventListener('keyup', e => { keys[e.key] = false; });
+cv.addEventListener('click', action);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>My Page</title>
+
+<!-- ============================================================
+     Week 1 Software Installation - MyPage.html
+     Anthony Bayate - TECH*3500*01
+
+     This one file covers three separate steps from the handout:
+       Step 3.2  - the h1..h6 headings practice
+       Step 6.3  - a CodePen button's CSS pasted inside <style> tags
+       Step 6.5  - a <script> block with the adjustFirst() function
+       Step 6.6  - a "Click Me" button that calls adjustFirst()
+       Step 6.7  - a "Print this page" button that calls window.print()
+     ============================================================ -->
+
+<style>
+    /* --- page basics (mine, so the screenshot is readable) --- */
+    body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        max-width: 760px;
+        margin: 40px auto;
+        padding: 0 24px;
+        line-height: 1.6;
+        color: #1a1d26;
+        background: #fbfbfd;
+    }
+
+    hr {
+        border: none;
+        border-top: 1px solid #e2e5ee;
+        margin: 32px 0;
+    }
+
+    .note {
+        font-size: 0.85rem;
+        color: #666e80;
+        background: #f0f2f8;
+        border-left: 3px solid #6c5ce7;
+        padding: 10px 14px;
+        border-radius: 0 6px 6px 0;
+    }
+
+    /* --- Step 6.3: the CSS for the button, taken from a CodePen "3D button" --- */
+    .btn-3d {
+        display: inline-block;
+        padding: 14px 30px;
+        margin: 8px 8px 8px 0;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        background-color: #6c5ce7;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 6px 0 #4834b8, 0 8px 14px rgba(72, 52, 184, 0.35);
+        transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+    }
+
+    .btn-3d:hover {
+        background-color: #7d6ff0;
+    }
+
+    /* Pressing it drops the button onto its own shadow - that's the 3D effect. */
+    .btn-3d:active {
+        transform: translateY(6px);
+        box-shadow: 0 0 0 #4834b8, 0 2px 5px rgba(72, 52, 184, 0.3);
+    }
+
+    .btn-3d:focus-visible {
+        outline: 3px solid #b9aefc;
+        outline-offset: 3px;
+    }
+
+    /* A second colour so the two buttons are easy to tell apart in a screenshot. */
+    .btn-3d.btn-alt {
+        background-color: #00b894;
+        box-shadow: 0 6px 0 #008f72, 0 8px 14px rgba(0, 143, 114, 0.35);
+    }
+    .btn-3d.btn-alt:hover { background-color: #12cfa8; }
+    .btn-3d.btn-alt:active {
+        transform: translateY(6px);
+        box-shadow: 0 0 0 #008f72, 0 2px 5px rgba(0, 143, 114, 0.3);
+    }
+</style>
+
+<!-- Step 6.5: the script block goes below the style block, inside the head -->
+<script>
+    function adjustFirst() {
+        var header = document.querySelector('h1');
+        header.style.color = "red";
+    }
+</script>
+
+</head>
+<body>
+
+Hello
+HTML!
+
+<!-- Step 3.2: the headings practice, h1 down to h6 -->
+<h1>Welcome to CPS*3500</h1>
+<h2>Welcome to CPS*3500</h2>
+<h3>Welcome to CPS*3500</h3>
+<h4>Welcome to CPS*3500</h4>
+<h5>Welcome to CPS*3500</h5>
+<h6>Welcome to CPS*3500</h6>
+
+<p class="note">
+    Each heading level below h1 renders smaller and lighter. That's the browser's default
+    stylesheet, not something I set &mdash; the tags carry meaning about document
+    structure, and the sizing is just how the browser chooses to show it.
+</p>
+
+<hr>
+
+<!-- Step 6.6 and 6.7: the two buttons -->
+<button class="btn-3d" onclick="adjustFirst()">Click Me</button>
+<button class="btn-3d btn-alt" onclick="window.print()">Print this page</button>
+
+<p class="note">
+    Click <strong>Click Me</strong> first &mdash; it runs <code>adjustFirst()</code>, which
+    finds the first <code>&lt;h1&gt;</code> on the page and turns it red. Then click
+    <strong>Print this page</strong>, which calls <code>window.print()</code> and opens the
+    browser's print dialog, where you can choose "Save as PDF".
+</p>
+
+<hr>
+
+<p style="font-size: 0.8rem; color: #666e80;">
+    Anthony Bayate &middot; TECH*3500*01 &middot; Week 1 AS2
+</p>
+
+</body>
+</html>

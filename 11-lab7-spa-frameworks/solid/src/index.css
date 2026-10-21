@@ -1,0 +1,9 @@
+@import "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css";
+body { background: #fbf4f0; }
+h1 { font-size: 2.6rem; margin-bottom: 0; }
+.subtitle { margin-top: 4px; color: #555; }
+.nav-wrapper .right { padding-right: 8px; }
+.card .card-image img { height: 240px; object-fit: cover; }
+.card .card-content { min-height: 210px; }
+.card .card-title { font-size: 1.4rem; }
+.chip { height: 26px; line-height: 26px; font-size: 12px; }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet Command AI - Battleship vs. an AI Admiral</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>⚓ FLEET COMMAND</h1>
+  <p class="sub">Battleship against <b>ADMIRAL ORCA</b>, an AI opponent that hunts, learns your habits, and gets smarter on harder levels.</p>
+</header>
+
+<section id="setup" class="bar">
+  <label>AI difficulty
+    <select id="difficulty">
+      <option value="easy">Easy – random shots</option>
+      <option value="medium" selected>Medium – hunt &amp; target</option>
+      <option value="hard">Hard – probability-density AI</option>
+    </select>
+  </label>
+  <button id="rotateBtn">Rotate ship (R)</button>
+  <button id="randomBtn">Randomize my fleet</button>
+  <button id="startBtn" disabled>Start battle</button>
+  <button id="resetBtn" class="ghost">Reset</button>
+</section>
+
+<div id="status" class="status">Place your fleet: click your grid to position the highlighted ship.</div>
+
+<main>
+  <section>
+    <h2>Your Fleet</h2>
+    <div id="playerGrid" class="grid"></div>
+    <div id="playerShips" class="shiplist"></div>
+  </section>
+  <section>
+    <h2>Enemy Waters (Admiral Orca)</h2>
+    <div id="enemyGrid" class="grid disabled"></div>
+    <div id="enemyShips" class="shiplist"></div>
+    <div class="row">
+      <button id="sonarBtn" disabled>📡 Sonar ping (<span id="sonarLeft">3</span> left)</button>
+    </div>
+  </section>
+  <aside>
+    <h2>Battle Log</h2>
+    <div id="log" class="log"></div>
+    <h2>Record</h2>
+    <div id="record" class="record"></div>
+  </aside>
+</main>
+
+<footer>Anthony Bayate · Kean University · Web Client-Side Programming · Lab #6: Play with AI</footer>
+<script src="ai.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

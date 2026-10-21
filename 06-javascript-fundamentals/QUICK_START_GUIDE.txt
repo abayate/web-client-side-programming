@@ -1,0 +1,321 @@
+================================================================================
+        VOLDEMORT WEBSITE - QUICK START GUIDE
+        Get Up and Running in 5 Minutes
+================================================================================
+
+STEP 1: NAVIGATE TO PROJECT FOLDER
+================================================================================
+Open PowerShell or Command Prompt and navigate to:
+
+cd "c:\Users\antho\Desktop\fall 2026 classes kean\web client side programming\ab_js\express_project"
+
+STEP 2: INSTALL DEPENDENCIES
+================================================================================
+Install Express and other required packages:
+
+npm install
+
+Expected output:
+  added XX packages in XXs
+
+STEP 3: START THE SERVER
+================================================================================
+Run the Express server:
+
+npm start
+
+Expected output:
+  🖤 VOLDEMORT WEBSITE SERVER RUNNING 🖤
+  🌐 Server: http://localhost:3000
+  Available Routes:
+     GET /              → Home
+     GET /about         → About Voldemort
+     GET /history       → History
+     GET /achievements  → Achievements
+     GET /api/facts     → Voldemort Facts (JSON API)
+
+STEP 4: OPEN IN BROWSER
+================================================================================
+Open your web browser and visit:
+
+http://localhost:3000
+
+You should see the Voldemort website home page with:
+- Dark gothic theme
+- Navigation menu at top
+- Hero image
+- Introduction text
+- "Load Voldemort Facts" button
+
+STEP 5: EXPLORE THE WEBSITE
+================================================================================
+Navigate using the menu:
+- Home (/) - Introduction and facts loader
+- About (/about) - Biography and early life
+- History (/history) - Timeline of events
+- Achievements (/achievements) - Notable accomplishments
+
+STEP 6: TEST FEATURES
+================================================================================
+1. Click "Load Voldemort Facts" button
+   - Should fetch facts from /api/facts endpoint
+   - Display 5 facts about Voldemort
+
+2. Use Keyboard Shortcuts
+   - Press 'H' for Home
+   - Press 'A' for About
+   - Press 'T' for History (Timeline)
+   - Press 'E' for Achievements (Exploits)
+
+3. View Console Logs
+   - Open Browser DevTools (F12)
+   - Go to Console tab
+   - See logging and API responses
+
+STEP 7: STOP THE SERVER
+================================================================================
+To stop the server, press:
+
+Ctrl + C
+
+You'll see:
+  Terminated
+
+STEP 8: RESTART (OPTIONAL)
+================================================================================
+To restart the server anytime:
+
+npm start
+
+================================================================================
+COMMON ISSUES & SOLUTIONS
+================================================================================
+
+Issue: "Cannot find module 'express'"
+→ Run: npm install
+
+Issue: "Port 3000 already in use"
+→ Edit index.js, change: const PORT = 3001;
+
+Issue: Page shows "Cannot GET /"
+→ Make sure you're at http://localhost:3000 (not localhost:5000 or other port)
+
+Issue: CSS/JavaScript not loading
+→ Check browser console (F12) for errors
+→ Verify public/ folder exists with css/ and js/ subfolders
+
+Issue: Facts button doesn't work
+→ Open console (F12) to see error messages
+→ Check server is running (terminal should show "Server running...")
+
+================================================================================
+FILE DIRECTORY STRUCTURE
+================================================================================
+
+express_project/
+│
+├── index.js                          ← Main server file
+├── package.json                      ← Project config
+├── package-lock.json                 ← Dependency versions
+│
+├── public/                           ← Static files (served to browser)
+│   ├── css/
+│   │   └── styles.css               ← Dark theme styling
+│   └── js/
+│       └── scripts.js                ← Client-side JavaScript
+│
+├── views/                            ← HTML pages
+│   ├── index.html                   ← Home page
+│   ├── about.html                   ← About Voldemort
+│   ├── history.html                 ← Timeline
+│   ├── achievements.html            ← Achievements
+│   └── 404.html                     ← Error page
+│
+└── node_modules/                     ← Installed packages (auto-created)
+
+================================================================================
+API ENDPOINTS REFERENCE
+================================================================================
+
+GET http://localhost:3000/
+→ Returns: index.html (home page)
+
+GET http://localhost:3000/about
+→ Returns: about.html (about page)
+
+GET http://localhost:3000/history
+→ Returns: history.html (history page)
+
+GET http://localhost:3000/achievements
+→ Returns: achievements.html (achievements page)
+
+GET http://localhost:3000/api/facts
+→ Returns: JSON
+→ Example: {"facts": ["Fact 1", "Fact 2", ...], "count": 5}
+
+GET http://localhost:3000/invalid-page
+→ Returns: 404.html (error page)
+
+================================================================================
+TESTING IN POSTMAN (OPTIONAL)
+================================================================================
+
+1. Download and install Postman (optional)
+2. Create new GET request
+3. Set URL to: http://localhost:3000/api/facts
+4. Click Send
+5. Should see JSON response with facts
+
+Or simply visit in browser: http://localhost:3000/api/facts
+
+================================================================================
+DEVELOPMENT TIPS
+================================================================================
+
+1. Auto-Reload on Changes (Optional)
+   Install nodemon globally:
+   npm install -g nodemon
+
+   Then run:
+   nodemon index.js
+
+   Server will auto-restart when you change files
+
+2. Edit HTML Files
+   - Modify views/*.html files
+   - Refresh browser to see changes
+
+3. Edit CSS
+   - Modify public/css/styles.css
+   - Refresh browser to see changes
+   - Hold Ctrl+Shift+R for hard refresh
+
+4. Edit JavaScript
+   - Modify public/js/scripts.js
+   - Refresh browser to see changes
+   - Check console (F12) for errors
+
+5. Add New Routes
+   - Edit index.js
+   - Create new app.get() route
+   - Restart server (Ctrl+C, then npm start)
+
+================================================================================
+KEYBOARD SHORTCUTS
+================================================================================
+
+While viewing website:
+- H → Go to Home
+- A → Go to About
+- T → Go to History
+- E → Go to Achievements
+
+Browser DevTools (F12):
+- Ctrl + Shift + J → Open Console
+- Ctrl + Shift + I → Open DevTools
+- Right-click → Inspect Element
+
+Terminal:
+- Ctrl + C → Stop server
+- Up Arrow → Previous command
+- Ctrl + L → Clear screen
+
+================================================================================
+CHECKING IF SERVER IS RUNNING
+================================================================================
+
+Look for this in terminal:
+✓ Server displays "Server running on port 3000"
+✓ Website loads at http://localhost:3000
+✓ Navigation links work
+✓ CSS styling appears (dark theme)
+✓ Facts button is clickable
+
+If any of these fail, check:
+1. Terminal for error messages
+2. Port 3000 is available
+3. All files are in correct locations
+4. Dependencies installed with npm install
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Experiment with the application
+   - Test all pages
+   - Load facts multiple times
+   - Use keyboard shortcuts
+
+2. Modify the content
+   - Edit HTML files to change text
+   - Update CSS to change colors
+   - Modify JavaScript for new features
+
+3. Add new features
+   - Add more facts to the API
+   - Create new pages
+   - Add database integration
+
+4. Deploy (later)
+   - Upload to Heroku
+   - Upload to Railway
+   - Upload to any Node.js hosting
+
+5. Learn more about Express
+   - Study middleware
+   - Learn about routing
+   - Explore authentication
+
+================================================================================
+CHEAT SHEET
+================================================================================
+
+Install & Run:
+  npm install              ← Install dependencies
+  npm start               ← Start server
+  npm run dev             ← Start with auto-reload (if nodemon installed)
+  Ctrl + C                ← Stop server
+
+Navigate:
+  http://localhost:3000/           ← Home
+  http://localhost:3000/about      ← About
+  http://localhost:3000/history    ← History
+  http://localhost:3000/achievements ← Achievements
+  http://localhost:3000/api/facts  ← Facts API
+
+Edit Files:
+  index.js                ← Server logic (restart after editing)
+  views/*.html            ← Page content
+  public/css/styles.css   ← Styling
+  public/js/scripts.js    ← Client JavaScript
+
+Debug:
+  F12                     ← Open browser DevTools
+  Ctrl + Shift + J        ← Open Console
+  Console tab             ← See logs and errors
+
+================================================================================
+FINAL CHECKLIST
+================================================================================
+
+Before submitting, verify:
+☑ npm install ran successfully
+☑ npm start starts the server
+☑ Server shows "Server running on port 3000"
+☑ http://localhost:3000 loads home page
+☑ Navigation menu works (all 4 pages accessible)
+☑ CSS styling visible (dark theme)
+☑ "Load Voldemort Facts" button works
+☑ API endpoint http://localhost:3000/api/facts returns JSON
+☑ Invalid URLs show 404 page
+☑ Keyboard shortcuts work (H, A, T, E)
+☑ All files present in correct folders
+
+================================================================================
+You're All Set! 🖤
+
+The Voldemort website is ready to explore. Enjoy the dark lord's archive!
+
+Questions? Check README.md for more detailed documentation.
+
+================================================================================

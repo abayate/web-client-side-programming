@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Web Lab &mdash; Client-Side Image Classifier</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <h1>Client-Side AI with TensorFlow.js</h1>
+            <p class="subtitle">Lab 5 &mdash; Task 1 &middot; MobileNet image classification, running entirely in your browser</p>
+        </header>
+
+        <div id="tf-container" class="demo-card">
+            <div class="card-head">
+                <h3>Image Classification Demo</h3>
+                <span id="model-status" class="badge badge-loading">Loading model&hellip;</span>
+            </div>
+
+            <div class="image-wrapper">
+                <!-- Task 1 step 3: classifying labrador.jpg instead of the original cat -->
+                <img id="subject-image" src="img/labrador.jpg" alt="The image currently being classified" crossorigin="anonymous"/>
+            </div>
+
+            <div class="prediction-box">
+                <strong>Model&rsquo;s Top Predictions</strong>
+                <ol id="prediction-list" class="prediction-list">
+                    <li class="placeholder">Waiting for the model&hellip;</li>
+                </ol>
+                <p id="timing" class="timing"></p>
+            </div>
+
+            <div class="button-group">
+                <!-- Task 1 step 5 (challenge): upload and classify a new image -->
+                <button id="upload-btn" class="btn btn-primary" disabled>Classify New Image</button>
+                <button id="reset-btn" class="btn btn-secondary">Reset to Sample</button>
+                <input type="file" id="file-input" accept="image/*" hidden />
+            </div>
+
+            <p class="hint">Tip: everything below runs on your machine &mdash; no image is ever uploaded to a server.</p>
+        </div>
+
+        <footer class="page-footer">Anthony Bayate &middot; TECH*3500*01 &middot; Week 1 AS1</footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@latest/dist/mobilenet.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

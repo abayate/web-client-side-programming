@@ -1,0 +1,21 @@
+{
+  "name": "ab-openai-agents-lab",
+  "version": "1.0.0",
+  "description": "Lab 5 Section 6 - OpenAI Agents SDK examples including the Recipe Agent capstone",
+  "type": "module",
+  "scripts": {
+    "examples:99-hello-world": "node --import=tsx examples/99-hello-world.ts",
+    "examples:100-functions": "node --import=tsx examples/100-functions.ts",
+    "examples:101-recipe-agent": "node --import=tsx examples/101-recipe-agent.ts"
+  },
+  "author": "Anthony Bayate",
+  "license": "ISC",
+  "dependencies": {
+    "@openai/agents": "^0.0.10",
+    "dotenv": "^17.2.0",
+    "zod": "3.25.67"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}

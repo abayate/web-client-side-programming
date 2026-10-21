@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthony Bayate — Student Developer</title>
+    <meta name="description" content="Anthony Bayate — computing student at Kean University. Projects, skills, and contact.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+    <a href="#top" class="nav-logo">AB</a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links"
+            aria-label="Open navigation menu">
+        <span></span><span></span><span></span>
+    </button>
+
+    <nav class="nav-links" id="nav-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+        <button id="theme-toggle" class="theme-toggle" aria-label="Switch to dark mode">
+            <span aria-hidden="true">◐</span>
+        </button>
+    </nav>
+</header>
+
+<main id="top">
+
+    <!-- ============================ HERO ============================ -->
+    <section class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow reveal">Kean University · Union, NJ</p>
+
+            <h1 class="reveal">
+                Hi, I'm <span class="grad">Anthony Bayate</span>.<br>
+                I build things for the web.
+            </h1>
+
+            <!-- TODO: rewrite this one sentence in your own words. It is the first thing
+                 a recruiter reads, so make it specific to what you actually want to do. -->
+            <p class="hero-sub reveal">
+                Computing student focused on front-end development and, lately, on wiring
+                AI models into ordinary web apps. Currently taking Web Client-Side
+                Programming (TECH&#42;3500).
+            </p>
+
+            <div class="hero-actions reveal">
+                <a href="#projects" class="btn btn-primary">See my work</a>
+                <!-- TODO: replace with a link to your real resume PDF -->
+                <a href="#contact" class="btn btn-ghost">Get in touch</a>
+            </div>
+
+            <ul class="hero-stats reveal">
+                <!-- TODO: update these three numbers as they change -->
+                <li><strong>3</strong><span>projects shipped</span></li>
+                <li><strong>5+</strong><span>languages &amp; frameworks</span></li>
+                <li><strong>2026</strong><span>expected graduation</span></li>
+            </ul>
+        </div>
+
+        <div class="hero-glow" aria-hidden="true"></div>
+    </section>
+
+    <!-- ============================ ABOUT ============================ -->
+    <section id="about" class="section">
+        <div class="section-head reveal">
+            <span class="section-num">01</span>
+            <h2>About</h2>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <!-- TODO: replace these two paragraphs with your own story. Keep it short.
+                     Good things to mention: why you got into computing, what you're
+                     studying, what kind of role you want next. -->
+                <p>
+                    I'm a computing student at Kean University. I got into programming
+                    because I liked that you could have an idea in the morning and a
+                    working thing by the evening — and that the feedback loop is honest.
+                    Either it runs or it doesn't.
+                </p>
+                <p>
+                    Most of my work so far has been front-end: HTML, CSS, and JavaScript,
+                    with a growing amount of Node.js on the back. This semester I've been
+                    building AI-integrated web apps — running models in the browser with
+                    TensorFlow.js and building retrieval pipelines with LangChain.
+                </p>
+                <p>
+                    Outside of class I'm usually
+                    <!-- TODO: put something real here. Hobbies make you a person. -->
+                    <span class="todo">[your hobbies / interests]</span>.
+                </p>
+            </div>
+
+            <aside class="about-card reveal">
+                <h3>At a glance</h3>
+                <dl>
+                    <dt>Studying</dt>
+                    <!-- TODO: confirm your exact major -->
+                    <dd>Computer Science, Kean University</dd>
+
+                    <dt>Focus</dt>
+                    <dd>Front-end &amp; applied AI</dd>
+
+                    <dt>Location</dt>
+                    <dd>New Jersey, USA</dd>
+
+                    <dt>Looking for</dt>
+                    <!-- TODO: internship? part-time? summer 2027? be specific -->
+                    <dd>Summer internship</dd>
+                </dl>
+            </aside>
+        </div>
+    </section>
+
+    <!-- ============================ PROJECTS ============================ -->
+    <section id="projects" class="section">
+        <div class="section-head reveal">
+            <span class="section-num">02</span>
+            <h2>Projects</h2>
+        </div>
+
+        <div class="projects">
+
+            <!-- This first one is real - it's your Lab 5 work. Keep it. -->
+            <article class="project reveal">
+                <div class="project-top">
+                    <h3>AI Résumé Analyzer</h3>
+                    <span class="badge">Coursework</span>
+                </div>
+                <p>
+                    Upload a résumé PDF and get three perspectives on it: an advocate, a
+                    skeptic, and a synthesized hiring verdict — plus a chat panel for
+                    follow-up questions. Built on a LangChain retrieval pipeline with an
+                    Express backend, so the API key never reaches the browser.
+                </p>
+                <ul class="tags">
+                    <li>Node.js</li><li>Express</li><li>LangChain</li><li>OpenAI API</li>
+                </ul>
+                <div class="project-links">
+                    <!-- TODO: add real links once you push this to GitHub -->
+                    <a href="#" class="link-arrow">Source <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+            <article class="project reveal">
+                <div class="project-top">
+                    <h3>In-Browser Image Classifier</h3>
+                    <span class="badge">Coursework</span>
+                </div>
+                <p>
+                    A MobileNet image classifier running entirely client-side with
+                    TensorFlow.js — upload any photo and get ranked predictions with
+                    confidence bars in about 200&nbsp;ms, with no server round trip and no
+                    image ever leaving your machine.
+                </p>
+                <ul class="tags">
+                    <li>JavaScript</li><li>TensorFlow.js</li><li>CSS</li>
+                </ul>
+                <div class="project-links">
+                    <a href="#" class="link-arrow">Source <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+            <!-- TODO: replace this whole card with a real third project. -->
+            <article class="project reveal">
+                <div class="project-top">
+                    <h3><span class="todo">[Your third project]</span></h3>
+                    <span class="badge">Personal</span>
+                </div>
+                <p>
+                    <span class="todo">
+                        Two or three sentences: what it does, who it's for, and the one
+                        technical thing you're proudest of. Mention a number if you have one.
+                    </span>
+                </p>
+                <ul class="tags">
+                    <li>Tech</li><li>Stack</li><li>Here</li>
+                </ul>
+                <div class="project-links">
+                    <a href="#" class="link-arrow">Source <span aria-hidden="true">→</span></a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- ============================ SKILLS ============================ -->
+    <section id="skills" class="section">
+        <div class="section-head reveal">
+            <span class="section-num">03</span>
+            <h2>Skills</h2>
+        </div>
+
+        <!-- TODO: be honest here. Delete anything you couldn't answer a question about
+             in an interview - an inflated skills list is a liability, not an asset. -->
+        <div class="skills">
+            <div class="skill-group reveal">
+                <h3>Languages</h3>
+                <ul class="tags"><li>JavaScript</li><li>HTML5</li><li>CSS3</li><li>Python</li><li>SQL</li></ul>
+            </div>
+            <div class="skill-group reveal">
+                <h3>Frameworks &amp; libraries</h3>
+                <ul class="tags"><li>Node.js</li><li>Express</li><li>LangChain</li><li>TensorFlow.js</li></ul>
+            </div>
+            <div class="skill-group reveal">
+                <h3>Tools</h3>
+                <ul class="tags"><li>Git &amp; GitHub</li><li>VS Code</li><li>Linux / SSH</li><li>MobaXterm</li></ul>
+            </div>
+            <div class="skill-group reveal">
+                <h3>Currently learning</h3>
+                <ul class="tags"><li>React</li><li>TypeScript</li><li>Databases</li></ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================ CONTACT ============================ -->
+    <section id="contact" class="section">
+        <div class="section-head reveal">
+            <span class="section-num">04</span>
+            <h2>Contact</h2>
+        </div>
+
+        <div class="contact reveal">
+            <p class="contact-lede">
+                Open to internships, project collaborations, or just talking about what
+                you're building. The fastest way to reach me is email.
+            </p>
+
+            <div class="contact-links">
+                <!-- TODO: swap in the email address you actually want listed publicly -->
+                <a class="contact-link" href="mailto:anthonybayate@outlook.com">
+                    <span class="cl-label">Email</span>
+                    <span class="cl-value">anthonybayate@outlook.com</span>
+                </a>
+
+                <!-- TODO: replace with your real GitHub URL -->
+                <a class="contact-link" href="#" target="_blank" rel="noopener">
+                    <span class="cl-label">GitHub</span>
+                    <span class="cl-value todo">github.com/[username]</span>
+                </a>
+
+                <!-- TODO: replace with your real LinkedIn URL -->
+                <a class="contact-link" href="#" target="_blank" rel="noopener">
+                    <span class="cl-label">LinkedIn</span>
+                    <span class="cl-value todo">linkedin.com/in/[username]</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>&copy; <span id="year">2026</span> Anthony Bayate. Built by hand with HTML, CSS, and JavaScript.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
