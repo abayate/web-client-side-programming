@@ -118,23 +118,38 @@ const tools = [
   },
 ];
 
-// Gemini's free tier often answers 503 "high demand". Retry with backoff,
-// then try the lighter fallback model before giving up.
+// Gemini's free tier fails in two ways: 503 "high demand" (worth one retry)
+// and 429 quota exhausted (retrying the same model is pointless). On a 429 we
+// park that model for a minute and go straight to the lighter fallback model.
 const FALLBACK_MODEL = process.env.FALLBACK_MODEL || 'gemini-flash-lite-latest';
+const CALL_TIMEOUT_MS = 40_000;
+const QUOTA_COOLDOWN_MS = 60_000;
+const parkedUntil = new Map();
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 async function generate(req) {
-  const plan = [MODEL, MODEL, MODEL, FALLBACK_MODEL, FALLBACK_MODEL];
   let lastErr;
-  for (let i = 0; i < plan.length; i++) {
-    try {
-      return await client().models.generateContent({ model: plan[i], ...req });
-    } catch (e) {
-      lastErr = e;
-      if (!/\b(503|500|429)\b|UNAVAILABLE|overloaded|high demand/i.test(e.message)) throw e;
-      await sleep(800 * 2 ** Math.min(i, 2));
+  for (const model of [MODEL, FALLBACK_MODEL]) {
+    if ((parkedUntil.get(model) || 0) > Date.now()) continue;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const t0 = Date.now();
+      try {
+        // A per-attempt timeout so one stuck call can't eat the whole function budget.
+        const res = await client().models.generateContent({
+          model, ...req, config: { ...req.config, httpOptions: { timeout: CALL_TIMEOUT_MS } },
+        });
+        console.log(`[gemini] ${model} ok in ${Date.now() - t0}ms`);
+        return res;
+      } catch (e) {
+        lastErr = e;
+        console.log(`[gemini] ${model} failed in ${Date.now() - t0}ms: ${e.message.slice(0, 120)}`);
+        if (/\b429\b|quota|RESOURCE_EXHAUSTED/i.test(e.message)) { parkedUntil.set(model, Date.now() + QUOTA_COOLDOWN_MS); break; }
+        if (!/\b(503|500)\b|UNAVAILABLE|overloaded|high demand|timeout|timed out|abort/i.test(e.message)) throw e;
+        await sleep(1000);
+      }
     }
   }
-  throw lastErr;
+  throw lastErr || new Error('503 UNAVAILABLE: all models are rate-limited right now');
 }
 
 const isDate = (s) => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && !isNaN(new Date(s));
