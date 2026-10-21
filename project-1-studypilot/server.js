@@ -15,11 +15,11 @@ app.use((req, res, next) => {
   });
   next();
 });
-// Locally Express serves public/. On Vercel the CDN serves public/ files, but
-// "/" still reaches this function, so send index.html explicitly.
+// Locally Express serves public/. On Vercel the CDN serves public/ files but
+// "/" still reaches this function (without public/ bundled), so redirect there.
 const PUBLIC = path.join(import.meta.dirname, 'public');
 app.use(express.static(PUBLIC));
-app.get('/', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html')));
+app.get('/', (req, res) => res.sendFile(path.join(PUBLIC, 'index.html'), (err) => err && res.redirect('/index.html')));
 
 // The app is public and the API key is mine, so cap requests per IP.
 const WINDOW_MS = 10 * 60 * 1000, MAX_REQ = 40;
