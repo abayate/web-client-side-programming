@@ -292,7 +292,11 @@ blocks for the midterm and explained the trade-off.}
         \texttt{gemini-flash-latest}, and at first every step wasted time retrying it, so one
         quiz request took about 4 minutes on Vercel. Now a quota error parks that model for a
         minute and the server goes straight to \texttt{gemini-flash-lite-latest}, which brought
-        the same request down to about 5 seconds. A paid key would remove the problem.
+        the same request down to about 5 seconds. Later \texttt{gemini-flash-latest} started
+        hanging until Gemini returned a 504 \texttt{DEADLINE\_EXCEEDED}, which my code treated as
+        a hard error, so every message failed. Timeouts and 504s now park the model the same way,
+        with a 20-second limit per call, and replies came back in about 2 seconds again. A paid
+        key would remove the problem.
   \item Calendar export (\texttt{.ics}) and reminders would make the plan follow the student
         instead of waiting in a tab.
 \end{itemize}
