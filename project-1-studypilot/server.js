@@ -44,7 +44,7 @@ app.post('/api/agent', rateLimit, async (req, res) => {
     res.json(out);
   } catch (e) {
     console.error('[agent]', e.message);
-    const busy = /429|503|quota|RESOURCE_EXHAUSTED|UNAVAILABLE|high demand/i.test(e.message);
+    const busy = /429|503|504|quota|RESOURCE_EXHAUSTED|UNAVAILABLE|DEADLINE_EXCEEDED|high demand|timeout|timed out/i.test(e.message);
     res.status(busy ? 503 : 500).json({ error: busy ? 'The AI model is busy right now (Gemini free tier). Wait a few seconds and send again; your data is saved.' : `Agent error: ${e.message.slice(0, 300)}` });
   }
 });

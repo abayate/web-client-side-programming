@@ -118,11 +118,12 @@ const tools = [
   },
 ];
 
-// Gemini's free tier fails in two ways: 503 "high demand" (worth one retry)
-// and 429 quota exhausted (retrying the same model is pointless). On a 429 we
-// park that model for a minute and go straight to the lighter fallback model.
+// Gemini's free tier fails in three ways: 503 "high demand" (worth one retry),
+// 429 quota exhausted, and calls that hang until a 504 or our timeout. Retrying
+// the last two on the same model is pointless, so we park that model for a
+// minute and go straight to the lighter fallback model.
 const FALLBACK_MODEL = process.env.FALLBACK_MODEL || 'gemini-flash-lite-latest';
-const CALL_TIMEOUT_MS = 40_000;
+const CALL_TIMEOUT_MS = 20_000;
 const QUOTA_COOLDOWN_MS = 60_000;
 const parkedUntil = new Map();
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -143,8 +144,8 @@ async function generate(req) {
       } catch (e) {
         lastErr = e;
         console.log(`[gemini] ${model} failed in ${Date.now() - t0}ms: ${e.message.slice(0, 120)}`);
-        if (/\b429\b|quota|RESOURCE_EXHAUSTED/i.test(e.message)) { parkedUntil.set(model, Date.now() + QUOTA_COOLDOWN_MS); break; }
-        if (!/\b(503|500)\b|UNAVAILABLE|overloaded|high demand|timeout|timed out|abort/i.test(e.message)) throw e;
+        if (/\b(429|504)\b|quota|RESOURCE_EXHAUSTED|DEADLINE_EXCEEDED|timeout|timed out|abort/i.test(e.message)) { parkedUntil.set(model, Date.now() + QUOTA_COOLDOWN_MS); break; }
+        if (!/\b(503|500)\b|UNAVAILABLE|overloaded|high demand/i.test(e.message)) throw e;
         await sleep(1000);
       }
     }
